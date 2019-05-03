@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/start_mobile_navigation"
+            app:startDestination="@id/splashFragment">
+
+    <fragment
+            android:id="@+id/splashFragment"
+            android:name="com.tstv.newsapp.ui.splash.SplashFragment"
+            android:label="fragment_splash"
+            tools:layout="@layout/fragment_splash">
+        <action
+                android:id="@+id/action_to_interests_fragment"
+                app:destination="@+id/destination_interests_fragment"
+                app:popUpTo="@+id/splashFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="false"/>
+        <action
+                android:id="@+id/action_to_mainActivity"
+                app:destination="@+id/mobile_navigation"
+                app:popUpTo="@+id/splashFragment"
+                app:launchSingleTop="false"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/destination_interests_fragment"
+            android:name="com.tstv.newsapp.ui.interests.InterestsFragment"
+            android:label="interests_fragment"
+            tools:layout="@layout/interests_fragment"/>
+    <include app:graph="@navigation/main_mobile_navigation"/>
+</navigation>
