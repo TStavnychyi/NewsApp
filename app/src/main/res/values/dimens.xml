@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="interests_fragment_welcome_text_size">18sp</dimen>
+    <dimen name="interests_fragment_welcome_text_size">24sp</dimen>
 </resources>

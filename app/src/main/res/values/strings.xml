@@ -3,4 +3,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="interests_topic_max_item_selected_warning">You can only select 3 interesting topics</string>
+    <string name="no_interesting_topic_selected_warning">Please, select at least one interesting for you topic</string>
+
+    <string-array name="interests_categories">
+        <item>General</item>
+        <item>Politics</item>
+        <item>Sport</item>
+        <item>Business</item>
+        <item>Entertainment</item>
+        <item>Technology</item>
+        <item>Science</item>
+        <item>Health</item>
+    </string-array>
 </resources>
