@@ -2,17 +2,12 @@ package com.tstv.newsapp.ui.interests
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import com.tstv.newsapp.R
+import com.tstv.newsapp.internal.Category
 
-class InterestsAdapter(
+class NewsCategoriesAdapter(
     val context: Context,
     private val categoriesList: List<Category>) : BaseAdapter() {
 
@@ -36,13 +31,11 @@ class InterestsAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-       return position.toLong()
+        return position.toLong()
     }
 
     override fun getCount(): Int {
-       return categoriesList.size
+        return categoriesList.size
     }
-
-    data class Category(val categoryText: String, val categoryImage: Drawable)
 
 }

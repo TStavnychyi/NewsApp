@@ -1,4 +1,6 @@
-package com.tstv.newsapp.data.db
+package com.tstv.newsapp.data.db.entity
+
+import com.tstv.newsapp.data.db.entity.Article
 
 data class NewsResponse(
     val articles: List<Article>,

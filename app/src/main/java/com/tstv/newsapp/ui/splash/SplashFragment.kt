@@ -2,16 +2,15 @@ package com.tstv.newsapp.ui.splash
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.preference.PreferenceManager
-
 import com.tstv.newsapp.R
-import com.tstv.newsapp.ui.SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED
+import com.tstv.newsapp.internal.SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED
 
 class SplashFragment : Fragment() {
 

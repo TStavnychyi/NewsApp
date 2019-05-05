@@ -25,8 +25,8 @@
     </fragment>
     <fragment
             android:id="@+id/destination_interests_fragment"
-            android:name="com.tstv.newsapp.ui.interests.InterestsFragment"
+            android:name="com.tstv.newsapp.ui.interests.NewsCategoriesFragment"
             android:label="interests_fragment"
-            tools:layout="@layout/interests_fragment"/>
+            tools:layout="@layout/news_interests_fragment"/>
     <include app:graph="@navigation/main_mobile_navigation"/>
 </navigation>

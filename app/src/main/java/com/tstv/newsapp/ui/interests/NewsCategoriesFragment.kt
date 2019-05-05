@@ -1,42 +1,44 @@
 package com.tstv.newsapp.ui.interests
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.tstv.newsapp.R
-import com.tstv.newsapp.ui.SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED
-import com.tstv.newsapp.ui.interests.InterestsAdapter.*
-import kotlinx.android.synthetic.main.interests_fragment.*
+import com.tstv.newsapp.internal.Category
+import kotlinx.android.synthetic.main.news_interests_fragment.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class InterestsFragment : Fragment() {
+class NewsCategoriesFragment : Fragment(), KodeinAware {
+
+    override val kodein by closestKodein()
+    private val viewModelFactory: NewsCategoriesViewModelFactory by instance()
+
+    private lateinit var viewModel: NewsCategoriesViewModel
 
     companion object {
-        fun newInstance() = InterestsFragment()
+        fun newInstance() = NewsCategoriesFragment()
     }
 
-    private lateinit var viewModel: InterestsViewModel
-
-    private val selectedCategoriesList = mutableListOf<Category>()
+    private lateinit var newsCategoriesAdapter: NewsCategoriesAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.interests_fragment, container, false)
+        val view = inflater.inflate(R.layout.news_interests_fragment, container, false)
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewsCategoriesViewModel::class.java)
+
         setupViews()
-
-
-        viewModel = ViewModelProviders.of(this).get(InterestsViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
     private fun setupViews() {
@@ -48,68 +50,58 @@ class InterestsFragment : Fragment() {
 
     private fun getStartedButtonAction() {
 
-        if (selectedCategoriesList.isEmpty()) {
+        if (newsCategoriesAdapter.selectedPositions.isEmpty()) {
             Toast.makeText(context, getString(R.string.no_interesting_topic_selected_warning), Toast.LENGTH_SHORT).show()
+        }else{
+            viewModel.saveNewsInterestsToDB(newsCategoriesAdapter.selectedPositions)
         }
-
-//        val sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-//        with(sharedPref.edit()){
-//            putBoolean(SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED, true)
-//            apply()
-//        }
-
-        //TODO SAVE SELECTED TOPICS TO DB
     }
 
     private fun setupGridView() {
         val categoriesList = getCategoriesList()
-        val adapter = InterestsAdapter(this@InterestsFragment.context!!, categoriesList)
+        newsCategoriesAdapter = NewsCategoriesAdapter(this@NewsCategoriesFragment.context!!, categoriesList)
 
-        grid_view.adapter = adapter
-        grid_view.setOnItemClickListener { parent, view, position, id -> gridViewItemSelectedLogic(parent, view, position, adapter)
+        grid_view.adapter = newsCategoriesAdapter
+        grid_view.setOnItemClickListener { parent, view, position, id -> gridViewItemSelectedLogic(parent, view, position)
         }
     }
 
-    private fun gridViewItemSelectedLogic(parent: AdapterView<*>, view: View, position: Int, adapter: InterestsAdapter){
+    private fun gridViewItemSelectedLogic(parent: AdapterView<*>, view: View, position: Int){
         val customGridView = view as GridItemView
-        val selectedIndex = adapter.selectedPositions.indexOf(position)
+        val selectedIndex = newsCategoriesAdapter.selectedPositions.indexOf(position)
 
         if (selectedIndex > -1) {
-            adapter.selectedPositions.remove(position)
+            newsCategoriesAdapter.selectedPositions.remove(position)
             customGridView.display(false)
-            selectedCategoriesList.remove(parent.getItemAtPosition(position) as Category)
         }else {
-            if(selectedCategoriesList.size == 3) {
+            if(newsCategoriesAdapter.selectedPositions.size == 3) {
                 Toast.makeText(context, getString(R.string.interests_topic_max_item_selected_warning), Toast.LENGTH_SHORT).show()
             }else {
                 if (position == 0){
-                    deselectAllGridViewItems(parent, adapter)
-                }else if (adapter.selectedPositions.contains(0)) {
-                    deselectFirstGridViewItem(parent, adapter)
+                    deselectAllGridViewItems(parent)
+                }else if (newsCategoriesAdapter.selectedPositions.contains(0)) {
+                    deselectFirstGridViewItem(parent)
                 }
-                adapter.selectedPositions.add(position)
+                newsCategoriesAdapter.selectedPositions.add(position)
                 customGridView.display(true)
-                selectedCategoriesList.add(parent.getItemAtPosition(position) as Category)
             }
         }
     }
 
-    private fun deselectAllGridViewItems(parent: AdapterView<*>, adapter: InterestsAdapter){
-        selectedCategoriesList.clear()
-        for (selectedPosition in adapter.selectedPositions) {
+    private fun deselectAllGridViewItems(parent: AdapterView<*>){
+        for (selectedPosition in newsCategoriesAdapter.selectedPositions) {
             val view = parent.getChildAt(selectedPosition) as GridItemView
             view.display(false)
         }
-        adapter.selectedPositions.clear()
+        newsCategoriesAdapter.selectedPositions.clear()
     }
 
-    private fun deselectFirstGridViewItem(parent: AdapterView<*>, adapter: InterestsAdapter) {
-        if (adapter.selectedPositions.contains(0)) {
+    private fun deselectFirstGridViewItem(parent: AdapterView<*>) {
+        if (newsCategoriesAdapter.selectedPositions.contains(0)) {
             val view = parent.getChildAt(0) as GridItemView
             view.display(false)
         }
-        adapter.selectedPositions.remove(0)
-        selectedCategoriesList.remove(parent.getItemAtPosition(0) as Category)
+        newsCategoriesAdapter.selectedPositions.remove(0)
     }
 
     private fun getCategoriesList(): List<Category> {
