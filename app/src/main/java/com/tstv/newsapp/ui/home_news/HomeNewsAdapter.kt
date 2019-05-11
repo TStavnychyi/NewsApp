@@ -1,7 +1,7 @@
 package com.tstv.newsapp.ui.home_news
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.tstv.newsapp.R
+import com.tstv.newsapp.data.db.LocalDateConverter
 import com.tstv.newsapp.data.db.entity.Article
 import com.tstv.newsapp.internal.glide.GlideApp
 
@@ -90,11 +93,26 @@ class HomeNewsAdapter(
             with(item){
                 tvArticleTitle.text = title
                 tvArticlePublisher.text = author
-                tvArticlePublishDate.text = publishedAt
-                if(urlToImage.isEmpty()){
-                   ivArticleImage.visibility = View.GONE
-                }
-                GlideApp.with(view.context).load(urlToImage).listener(object: RequestListener<Drawable>{
+                parseAndSetDateToView(publishedAt)
+                    if(urlToImage.isEmpty())
+                    ivArticleImage.visibility = View.GONE
+                else
+                    setupGlide(urlToImage)
+            }
+            bindViewsClickListeners()
+        }
+
+        private fun setupGlide(imageUrlToDownload: String){
+            val requestOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(80, 80)
+                .centerCrop()
+                .placeholder(R.drawable.ic_check)
+
+            GlideApp.with(view.context)
+                .load(imageUrlToDownload)
+                .apply(requestOptions)
+                .listener(object: RequestListener<Drawable>{
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean
                     ): Boolean {
                         ivArticleImage.setImageDrawable(resource)
@@ -108,15 +126,22 @@ class HomeNewsAdapter(
                     }
 
                 }).into(ivArticleImage)
+        }
+
+        @SuppressLint("SetTextI18n")
+        private fun parseAndSetDateToView(publishedAt: String){
+            val localDate = LocalDateConverter.stringToDate(publishedAt)!!
+            tvArticlePublishDate.text = "${localDate.dayOfMonth}-${localDate.month}-${localDate.year}"
+        }
+
+        private fun bindViewsClickListeners(){
+            ivSaveArticleToBookmark.setOnClickListener { //TODO
+            }
+            ivArticleOptions.setOnClickListener { //TODO
             }
 
-            ivSaveArticleToBookmark.setOnClickListener { //TODO
-                 }
-            ivArticleOptions.setOnClickListener { //TODO
-                 }
-
             view.setOnClickListener { //TODO
-                 }
+            }
         }
 
     }

@@ -2,6 +2,7 @@ package com.tstv.newsapp
 
 import android.app.Application
 import androidx.preference.PreferenceManager
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.tstv.newsapp.data.db.NewsDatabase
 import com.tstv.newsapp.data.network.ConnectivityInterceptor
 import com.tstv.newsapp.data.network.ConnectivityInterceptorImpl
@@ -39,5 +40,6 @@ class NewsApplication: Application(), KodeinAware {
 
     override fun onCreate() {
         super.onCreate()
+        AndroidThreeTen.init(this)
     }
 }

@@ -37,8 +37,8 @@
             android:id="@+id/tv_article_title"/>
 
     <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/ic_interests_entertainment"
             app:layout_constraintEnd_toEndOf="parent"
             android:scaleType="centerCrop"
@@ -54,7 +54,6 @@
             android:layout_height="wrap_content"
             android:text="Taras Stavnychyy"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_article_publish_date"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/articles_views_margin_start"
@@ -91,6 +90,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/iv_article_options_button"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 

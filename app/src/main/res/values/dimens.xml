@@ -2,6 +2,6 @@
 <resources>
     <dimen name="interests_fragment_welcome_text_size">24sp</dimen>
     <dimen name="articles_view_additional_buttons_size">25dp</dimen>
-    <dimen name="articles_view_article_title_text_size">24sp</dimen>
+    <dimen name="articles_view_article_title_text_size">22sp</dimen>
     <dimen name="articles_views_margin_start">16dp</dimen>
 </resources>
