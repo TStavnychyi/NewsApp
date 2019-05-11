@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import com.tstv.newsapp.R
 import com.tstv.newsapp.internal.Category
+import com.tstv.newsapp.ui.splash.SplashFragmentDirections
 import kotlinx.android.synthetic.main.news_interests_fragment.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -22,10 +24,6 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
     private val viewModelFactory: NewsCategoriesViewModelFactory by instance()
 
     private lateinit var viewModel: NewsCategoriesViewModel
-
-    companion object {
-        fun newInstance() = NewsCategoriesFragment()
-    }
 
     private lateinit var newsCategoriesAdapter: NewsCategoriesAdapter
 
@@ -45,7 +43,6 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
         setupGridView()
 
         btn_get_started.setOnClickListener { getStartedButtonAction() }
-
     }
 
     private fun getStartedButtonAction() {
@@ -54,6 +51,7 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
             Toast.makeText(context, getString(R.string.no_interesting_topic_selected_warning), Toast.LENGTH_SHORT).show()
         }else{
             viewModel.saveNewsInterestsToDB(newsCategoriesAdapter.selectedPositions)
+            navigateToMainActivity()
         }
     }
 
@@ -116,6 +114,11 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
             Category(categoriesTextsList[6], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_science)!!),
             Category(categoriesTextsList[7], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_health)!!)
         )
+    }
+
+    private fun navigateToMainActivity(){
+        val navController = Navigation.findNavController(this@NewsCategoriesFragment.activity!!, R.id.nav_host_start_fragment)
+        navController.navigate(NewsCategoriesFragmentDirections.actionDestinationInterestsFragmentToMobileNavigation())
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui
+package com.tstv.newsapp.ui.base
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +10,5 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
     }
-
 
 }

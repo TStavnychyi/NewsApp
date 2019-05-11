@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/start_mobile_navigation"
+            android:id="@+id/action_from_interests_to_main_activity"
             app:startDestination="@id/splashFragment">
 
     <fragment
@@ -27,6 +27,10 @@
             android:id="@+id/destination_interests_fragment"
             android:name="com.tstv.newsapp.ui.interests.NewsCategoriesFragment"
             android:label="interests_fragment"
-            tools:layout="@layout/news_interests_fragment"/>
+            tools:layout="@layout/news_interests_fragment">
+        <action
+                android:id="@+id/action_destination_interests_fragment_to_mobile_navigation"
+                app:destination="@id/mobile_navigation"/>
+    </fragment>
     <include app:graph="@navigation/main_mobile_navigation"/>
 </navigation>

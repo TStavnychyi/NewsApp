@@ -5,14 +5,29 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.news.NewsFragment">
+        tools:context=".ui.home_news.HomeNewsFragment">
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/guideline_ver"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_hor"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_hor_30_perc"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.35"/>
+
 
     <androidx.constraintlayout.widget.Group
             android:id="@+id/group_loading"
@@ -52,6 +67,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressBar_loading"
             app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tv_current_date"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_content_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_current_date"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 
 
 

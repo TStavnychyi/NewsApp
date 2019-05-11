@@ -2,6 +2,7 @@ package com.tstv.newsapp.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.tstv.newsapp.data.db.entity.NewsResponse
+import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -17,10 +18,10 @@ const val API_KEY = "1adcd40902fc456492c6416c3d5c4eb6"
 interface NewsApiService {
 
     @GET("top-headlines")
-    fun getNewsByCountryAndCategory (
+    fun getNewsByCountryAndCategoryAsync (
         @Query("country") country: String = "ua",
         @Query("category") category: String
-    ): Call<NewsResponse>
+    ): Deferred<NewsResponse>
 
     companion object {
         operator fun invoke(
@@ -29,7 +30,7 @@ interface NewsApiService {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("key", API_KEY)
+                    .addQueryParameter("apiKey", API_KEY)
                     .build()
 
                 val request = chain.request()

@@ -18,7 +18,7 @@ class GridItemView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.interests_categories_adapter_view, this)
+        val view = inflater.inflate(R.layout.interests_categories_adapter_view_item, this)
         categoryText = view.findViewById(R.id.tv_category_name)
         categoryImage = view.findViewById(R.id.iv_category_image)
         selectedIcon = view.findViewById(R.id.view_selected_icon)

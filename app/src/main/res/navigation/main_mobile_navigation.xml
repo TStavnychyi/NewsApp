@@ -7,12 +7,7 @@
 
     <fragment
             android:id="@+id/newsFragment"
-            android:name="com.tstv.newsapp.ui.news.NewsFragment"
+            android:name="com.tstv.newsapp.ui.home_news.HomeNewsFragment"
             android:label="news_fragment"
-            tools:layout="@layout/news_fragment"/>
-    <fragment
-            android:id="@+id/interestsFragment"
-            android:name="com.tstv.newsapp.ui.interests.NewsCategoriesFragment"
-            android:label="interests_fragment"
-            tools:layout="@layout/news_interests_fragment"/>
+            tools:layout="@layout/home_news_fragment"/>
 </navigation>

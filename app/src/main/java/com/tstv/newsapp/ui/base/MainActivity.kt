@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui
+package com.tstv.newsapp.ui.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
