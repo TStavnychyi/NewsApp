@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.Article
 import com.tstv.newsapp.ui.base.ScopedFragment
+import com.tstv.newsapp.ui.home_news.adapters.HomeNewsAdapter
 import kotlinx.android.synthetic.main.home_news_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,14 +40,28 @@ class HomeNewsFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun bindUI() = launch(Dispatchers.Main){
-        val newsArticlesList = viewModelHome.getNewsArticlesAsync()
+        val newsArticlesList = viewModelHome.getNewsArticlesAsync().await().articles
 
-        initRecyclerView(newsArticlesList.await().articles)
+        val list:MutableList<Any> = mutableListOf(newsArticlesList)
+
+
+        for (article in newsArticlesList){
+            list.add(article)
+        }
+
+
+        val list1: MutableList<List<Article>> = ArrayList()
+        list1.add(newsArticlesList)
+
+        list.add(newsArticlesList)
+        list.add(newsArticlesList)
+
+        initRecyclerView(list)
 
         group_loading.visibility = View.GONE
     }
 
-    private fun initRecyclerView(newsArticles: List<Article>){
+    private fun initRecyclerView(newsArticles: MutableList<Any>){
         val homeNewsAdapter = HomeNewsAdapter(newsArticles)
 
         main_content_recycler_view.apply {

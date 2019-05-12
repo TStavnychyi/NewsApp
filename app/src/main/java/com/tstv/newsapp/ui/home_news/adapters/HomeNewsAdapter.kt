@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.home_news
+package com.tstv.newsapp.ui.home_news.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,11 +21,11 @@ import com.tstv.newsapp.data.db.entity.Article
 import com.tstv.newsapp.internal.glide.GlideApp
 
 class HomeNewsAdapter(
-    val dataList: List<*>
+    val dataList: List<Any>
 ): RecyclerView.Adapter<HomeNewsAdapter.BaseViewHolder<*>>() {
 
     companion object{
-        private val TYPE_VIEW_PAGER = 0
+        private val TYPE_CARD_VIEWS_VIEW = 0
         private val TYPE_ARTICLE_VIEW = 1
     }
 
@@ -34,6 +35,10 @@ class HomeNewsAdapter(
             TYPE_ARTICLE_VIEW -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.home_news_adapter_normal_view_item, parent, false)
                 ArticleViewHolder(view)
+            }
+            TYPE_CARD_VIEWS_VIEW -> {
+                val view = LayoutInflater.from(context).inflate(R.layout.home_news_adapter_inner_recycler_view_item, parent, false)
+                ArticleCardViewsViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -47,7 +52,7 @@ class HomeNewsAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val dataElement = dataList[position]
         when(holder){
-            is ArticleViewPagerViewHolder -> holder.bind(dataElement as List<Article>)
+            is ArticleCardViewsViewHolder -> holder.bind(dataElement as List<Article>)
             is ArticleViewHolder -> holder.bind(dataElement as Article)
             else -> throw IllegalArgumentException()
         }
@@ -55,7 +60,7 @@ class HomeNewsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when(dataList[position]){
-            is List<*> -> TYPE_VIEW_PAGER
+            is List<*> -> TYPE_CARD_VIEWS_VIEW
             is Article -> TYPE_ARTICLE_VIEW
             else -> throw IllegalArgumentException("Invalid type of data in $position position")
         }
@@ -65,16 +70,23 @@ class HomeNewsAdapter(
         abstract fun bind(item: T)
     }
 
-    class ArticleViewPagerViewHolder(
-        val view: View,
-        val data: List<List<*>>
-    ): BaseViewHolder<List<Article>>(view){
+    class ArticleCardViewsViewHolder(
+        private val view: View
+        ): BaseViewHolder<List<Article>>(view){
 
+        private val title = view.findViewById<TextView>(R.id.tv_section_title)
+        private val cardViewsRecyclerView = view.findViewById<RecyclerView>(R.id.home_news_adapter_inner_recycler_view_item)
 
         override fun bind(item: List<Article>) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            bindRecyclerView(item)
+            title.text = "Popular here"
         }
 
+        private fun bindRecyclerView(articlesList: List<Article>){
+            cardViewsRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+            val cardViewAdapter = HomeNewsCardViewAdapter(articlesList)
+            cardViewsRecyclerView.adapter = cardViewAdapter
+        }
     }
 
     class ArticleViewHolder(
@@ -94,7 +106,7 @@ class HomeNewsAdapter(
                 tvArticleTitle.text = title
                 tvArticlePublisher.text = author
                 parseAndSetDateToView(publishedAt)
-                    if(urlToImage.isEmpty())
+                if(urlToImage.isEmpty())
                     ivArticleImage.visibility = View.GONE
                 else
                     setupGlide(urlToImage)

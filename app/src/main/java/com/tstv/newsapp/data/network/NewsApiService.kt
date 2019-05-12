@@ -19,7 +19,7 @@ interface NewsApiService {
 
     @GET("top-headlines")
     fun getNewsByCountryAndCategoryAsync (
-        @Query("country") country: String = "ua",
+        @Query("country") country: String = "us",
         @Query("category") category: String
     ): Deferred<NewsResponse>
 
