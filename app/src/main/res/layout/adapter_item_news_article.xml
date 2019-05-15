@@ -2,51 +2,45 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="@dimen/articles_views_margin_start"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="300dp">
 
-    <TextView
-            android:id="@+id/tv_article_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="POLITICS"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toTopOf="parent"
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/articles_views_margin_start"
-            />
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/cardView">
+
+        <ImageView
+                android:id="@+id/iv_article_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/sample"
+                android:scaleType="centerCrop"
+                />
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
+            android:id="@+id/tv_article_title"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:text="First touch to Flutter: nativate development within a cross-platform framework, is it real?"
-            app:layout_constraintTop_toBottomOf="@+id/tv_article_category"
-            android:textColor="@android:color/black"
+            android:layout_height="wrap_content"
+            android:text="The rookie and the pro: Different ways to succed o"
             android:textStyle="bold"
-            android:textSize="@dimen/articles_view_article_title_text_size"
-            android:maxLines="3"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:maxLines="2"
+            android:layout_margin="16dp"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/iv_article_image"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_article_publisher_name"
-            android:layout_marginStart="@dimen/articles_views_margin_start"
-            android:id="@+id/tv_article_title"/>
-
-    <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_interests_entertainment"
             app:layout_constraintEnd_toEndOf="parent"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="@dimen/articles_views_margin_start"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:id="@+id/iv_article_image"
-            app:layout_constraintBottom_toTopOf="@+id/tv_article_publisher_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_article_category"/>
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            />
 
     <TextView
             android:layout_width="wrap_content"
@@ -95,7 +89,5 @@
             android:layout_height="1dp"
             android:background="#b2ebf2"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

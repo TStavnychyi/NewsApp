@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.tstv.newsapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.KodeinAware
@@ -17,22 +18,13 @@ class MainActivity : AppCompatActivity(), KodeinAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
-        setupSideNavigationMenu(navController)
-        setupActionBar(navController)
-
+        bindBottomNavView(navController)
     }
 
-    private fun setupSideNavigationMenu(navController: NavController) {
-        NavigationUI.setupWithNavController(nav_view, navController)
+    private fun bindBottomNavView(navController: NavController){
+        NavigationUI.setupWithNavController(bottom_navigation, navController)
     }
-
-    private fun setupActionBar(navController: NavController) {
-        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
-    }
-
-
 }

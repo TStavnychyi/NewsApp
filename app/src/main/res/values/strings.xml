@@ -5,6 +5,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="interests_topic_max_item_selected_warning">You can only select 3 interesting topics</string>
     <string name="no_interesting_topic_selected_warning">Please, select at least one interesting for you topic</string>
+    <string name="news_page_title">News</string>
+    <string name="progress_bar_loading_text">Loading</string>
 
     <string-array name="interests_categories">
         <item>General</item>

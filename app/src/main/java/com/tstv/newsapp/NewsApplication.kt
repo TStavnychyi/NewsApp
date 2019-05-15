@@ -1,7 +1,6 @@
 package com.tstv.newsapp
 
 import android.app.Application
-import androidx.preference.PreferenceManager
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.tstv.newsapp.data.db.NewsDatabase
 import com.tstv.newsapp.data.network.ConnectivityInterceptor
@@ -9,7 +8,7 @@ import com.tstv.newsapp.data.network.ConnectivityInterceptorImpl
 import com.tstv.newsapp.data.network.NewsApiService
 import com.tstv.newsapp.data.repository.NewsRepository
 import com.tstv.newsapp.data.repository.NewsRepositoryImpl
-import com.tstv.newsapp.ui.home_news.HomeNewsViewModelFactory
+import com.tstv.newsapp.ui.home_news.NewsViewModelFactory
 import com.tstv.newsapp.ui.interests.NewsCategoriesViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -30,7 +29,7 @@ class NewsApplication: Application(), KodeinAware {
 
         //VIEW MODELS
         bind() from provider {NewsCategoriesViewModelFactory(instance(), instance())}
-        bind() from provider{HomeNewsViewModelFactory(instance())}
+        bind() from provider{NewsViewModelFactory(instance())}
 
         //NETWORK
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }

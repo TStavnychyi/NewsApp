@@ -4,4 +4,5 @@
     <dimen name="articles_view_additional_buttons_size">25dp</dimen>
     <dimen name="articles_view_article_title_text_size">22sp</dimen>
     <dimen name="articles_views_margin_start">16dp</dimen>
+    <dimen name="home_news_article_item_options_buttons_margin">14dp</dimen>
 </resources>

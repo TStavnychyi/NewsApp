@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/destination_home"
+            android:id="@+id/destination_news_fragment"
             app:showAsAction="ifRoom"
-            android:title="Home"
+            android:title="News"
             android:icon="@drawable/ic_home_black" />
 
     <item
-            android:id="@+id/destination_search"
+            android:id="@+id/destination_for_you"
             app:showAsAction="ifRoom"
-            android:title="Search"
+            android:title="For you"
             android:icon="@drawable/ic_search_black" />
 
     <item
@@ -24,10 +24,4 @@
             app:showAsAction="ifRoom"
             android:title="Interests"
             android:icon="@drawable/ic_mood_black_24dp" />
-
-    <item
-            android:id="@+id/destination_settings"
-            app:showAsAction="ifRoom"
-            android:title="Settings"
-            android:icon="@drawable/ic_settings" />
 </menu>

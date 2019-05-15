@@ -3,18 +3,20 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_margin="@dimen/articles_views_margin_start"
+        android:layout_height="230dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="6dp"
+        android:layout_margin="@dimen/articles_views_margin_start"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
 
         <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_hor_30_perc"
+                android:id="@+id/guideline_for_title"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:orientation="horizontal"
@@ -24,8 +26,8 @@
                 android:id="@+id/iv_article_image"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:scaleType="fitStart"
-                app:layout_constraintBottom_toTopOf="@+id/guideline_hor_30_perc"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/guideline_for_title"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="8dp"
                 />

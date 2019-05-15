@@ -24,19 +24,21 @@ class HomeNewsAdapter(
     val dataList: List<Any>
 ): RecyclerView.Adapter<HomeNewsAdapter.BaseViewHolder<*>>() {
 
+    private var currentViewID: Int = 0
+
     companion object{
-        private val TYPE_CARD_VIEWS_VIEW = 0
-        private val TYPE_ARTICLE_VIEW = 1
+        private const val TYPE_INNER_RECYCLER_VIEW = 1
+        private const val TYPE_ARTICLE_VIEW = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val context = parent.context
         return when(viewType){
             TYPE_ARTICLE_VIEW -> {
-                val view = LayoutInflater.from(context).inflate(R.layout.home_news_adapter_normal_view_item, parent, false)
+                val view = LayoutInflater.from(context).inflate(R.layout.adapter_item_news_article, parent, false)
                 ArticleViewHolder(view)
             }
-            TYPE_CARD_VIEWS_VIEW -> {
+            TYPE_INNER_RECYCLER_VIEW -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.home_news_adapter_inner_recycler_view_item, parent, false)
                 ArticleCardViewsViewHolder(view)
             }
@@ -60,9 +62,17 @@ class HomeNewsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when(dataList[position]){
-            is List<*> -> TYPE_CARD_VIEWS_VIEW
-            is Article -> TYPE_ARTICLE_VIEW
-            else -> throw IllegalArgumentException("Invalid type of data in $position position")
+            is List<*> -> {
+                currentViewID = TYPE_INNER_RECYCLER_VIEW
+                TYPE_INNER_RECYCLER_VIEW
+            }
+            is Article -> {
+                currentViewID = TYPE_ARTICLE_VIEW
+                TYPE_ARTICLE_VIEW
+            }
+            else -> {
+                throw IllegalArgumentException("Invalid type of data in $position position")
+            }
         }
     }
 
@@ -83,6 +93,7 @@ class HomeNewsAdapter(
         }
 
         private fun bindRecyclerView(articlesList: List<Article>){
+
             cardViewsRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
             val cardViewAdapter = HomeNewsCardViewAdapter(articlesList)
             cardViewsRecyclerView.adapter = cardViewAdapter
@@ -106,7 +117,8 @@ class HomeNewsAdapter(
                 tvArticleTitle.text = title
                 tvArticlePublisher.text = author
                 parseAndSetDateToView(publishedAt)
-                if(urlToImage.isEmpty())
+
+                if(urlToImage != null && item.urlToImage.isEmpty())
                     ivArticleImage.visibility = View.GONE
                 else
                     setupGlide(urlToImage)
@@ -117,7 +129,6 @@ class HomeNewsAdapter(
         private fun setupGlide(imageUrlToDownload: String){
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(80, 80)
                 .centerCrop()
                 .placeholder(R.drawable.ic_check)
 
