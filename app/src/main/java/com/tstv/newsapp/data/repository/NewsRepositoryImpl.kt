@@ -26,7 +26,10 @@ class NewsRepositoryImpl(
 
 
     override suspend fun getNewsArticlesAsync(category: String): Deferred<NewsResponse> {
-        return newsApiService.getNewsByCountryAndCategoryAsync(category = category.toLowerCase())
+        val list = newsApiService.getNewsByCountryAndCategoryAsync(category = category.toLowerCase())
+        Log.e("TAG", "HEllo")
+
+        return list
     }
 
     override fun saveNewsInterestsToDB(selectedNewsInterests: List<SelectedNewsCategoriesEntry>) {

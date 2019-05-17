@@ -33,7 +33,7 @@
             android:text="The rookie and the pro: Different ways to succed o"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="@dimen/article_adapter_item_normal_text_size"
             android:maxLines="2"
             android:layout_margin="16dp"
             android:ellipsize="end"
@@ -43,14 +43,34 @@
             />
 
     <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_article_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textColor="@android:color/secondary_text_dark"
+            android:textSize="@dimen/article_adapter_item_content_text_size"
+            android:maxLines="6"
+            android:visibility="gone"
+            android:layout_margin="16dp"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_article_title"
+            app:layout_constraintBottom_toTopOf="@+id/tv_article_publisher_name"/>
+
+    <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Taras Stavnychyy"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/tv_article_publish_date"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/articles_views_margin_start"
-            android:id="@+id/tv_article_publisher_name"/>
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/tv_article_publisher_name"
+            app:layout_constraintEnd_toStartOf="@+id/iv_article_save_bookmark"
+            android:layout_marginEnd="8dp"/>
 
     <TextView
             android:id="@+id/tv_article_publish_date"
@@ -85,6 +105,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_article_options_button"/>
 
     <View
+            android:id="@+id/divider_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#b2ebf2"

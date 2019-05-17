@@ -26,7 +26,7 @@ class HomeNewsCardViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardView_ViewHolder {
         val context = parent.context
-        val view = LayoutInflater.from(context).inflate(R.layout.home_news_adapter_card_view_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.adapter_item_top_news_feed, parent, false)
         return CardView_ViewHolder(view)
     }
 
@@ -54,7 +54,7 @@ class HomeNewsCardViewAdapter(
                 tvArticlePublisher.text = author
                 tvArticleTitle.text = title
                 parseAndSetDateToView(article.publishedAt)
-                if(urlToImage.isEmpty())
+                if(urlToImage != null && urlToImage.isEmpty())
                     ivArticleImage.visibility = View.GONE
                 else
                     setupGlide(urlToImage)
