@@ -8,8 +8,10 @@ import com.tstv.newsapp.data.network.ConnectivityInterceptorImpl
 import com.tstv.newsapp.data.network.NewsApiService
 import com.tstv.newsapp.data.repository.NewsRepository
 import com.tstv.newsapp.data.repository.NewsRepositoryImpl
-import com.tstv.newsapp.ui.home_news.NewsViewModelFactory
+import com.tstv.newsapp.ui.news.NewsViewModelFactory
 import com.tstv.newsapp.ui.interests.NewsCategoriesViewModelFactory
+import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment
+import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -24,8 +26,9 @@ class NewsApplication: Application(), KodeinAware {
         //DB
         bind() from singleton { NewsDatabase(instance()) }
         bind() from singleton { instance<NewsDatabase>().selectedNewsCategoriesDao() }
+        bind() from singleton { instance<NewsDatabase>().savedNewsArticleDao() }
 
-        bind<NewsRepository>() with singleton { NewsRepositoryImpl(instance(), instance()) }
+        bind<NewsRepository>() with singleton { NewsRepositoryImpl(instance(), instance(), instance()) }
 
         //VIEW MODELS
         bind() from provider {NewsCategoriesViewModelFactory(instance(), instance())}

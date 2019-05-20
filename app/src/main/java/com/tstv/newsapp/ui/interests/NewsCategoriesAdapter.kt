@@ -2,10 +2,10 @@ package com.tstv.newsapp.ui.interests
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.tstv.newsapp.internal.Category
 
 class NewsCategoriesAdapter(
     val context: Context,
@@ -37,5 +37,7 @@ class NewsCategoriesAdapter(
     override fun getCount(): Int {
         return categoriesList.size
     }
+
+    data class Category(val categoryText: String, val categoryImage: Drawable)
 
 }

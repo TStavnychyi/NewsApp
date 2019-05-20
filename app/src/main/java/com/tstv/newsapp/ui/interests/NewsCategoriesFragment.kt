@@ -1,5 +1,6 @@
 package com.tstv.newsapp.ui.interests
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.tstv.newsapp.R
-import com.tstv.newsapp.internal.Category
-import com.tstv.newsapp.ui.splash.SplashFragmentDirections
+import com.tstv.newsapp.ui.interests.NewsCategoriesAdapter.*
 import kotlinx.android.synthetic.main.news_interests_fragment.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -103,13 +103,17 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
     }
 
     private fun getCategoriesList(): List<Category> {
+
         val categoriesTextsList = activity?.resources?.getStringArray(R.array.interests_categories)!!
         return listOf(
             Category(categoriesTextsList[0], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_general)!!),
             Category(categoriesTextsList[1], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_politics)!!),
             Category(categoriesTextsList[2], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_sport)!!),
             Category(categoriesTextsList[3], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_business)!!),
-            Category(categoriesTextsList[4], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_entertainment)!!),
+            Category(
+                categoriesTextsList[4],
+                ContextCompat.getDrawable(context!!, R.drawable.ic_interests_entertainment)!!
+            ),
             Category(categoriesTextsList[5], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_technology)!!),
             Category(categoriesTextsList[6], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_science)!!),
             Category(categoriesTextsList[7], ContextCompat.getDrawable(context!!, R.drawable.ic_interests_health)!!)

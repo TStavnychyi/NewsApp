@@ -5,4 +5,5 @@
     <color name="colorAccent">#8d44ff</color>
 
     <color name="splashScreenBackground">#183A8F</color>
+    <color name="news_options_menu_item_image_color">#6d7278</color>
 </resources>

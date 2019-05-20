@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.home_news
+package com.tstv.newsapp.ui.news
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,11 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.entity.Article
+import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.ui.base.ScopedFragment
-import com.tstv.newsapp.ui.home_news.adapters.HomeNewsAdapter
+import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment.*
+import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment.ArticleOptionsBottomSheetListener.*
+import com.tstv.newsapp.ui.news.adapters.NewsAdapter
 import kotlinx.android.synthetic.main.news_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +20,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
-class NewsFragment : ScopedFragment(), KodeinAware {
+class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetListener {
 
     override val kodein by closestKodein()
 
@@ -38,6 +40,8 @@ class NewsFragment : ScopedFragment(), KodeinAware {
                 )
             }
         }
+
+
     }
 
     private lateinit var newsCategory: String
@@ -52,6 +56,7 @@ class NewsFragment : ScopedFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel = ViewModelProviders.of(this, vieWModelFactoryInstanceFactory).get(NewsViewModel::class.java)
     }
 
@@ -74,12 +79,30 @@ class NewsFragment : ScopedFragment(), KodeinAware {
 
         news_group_loading_bar.visibility = View.GONE
     }
-    private fun initRecyclerView(newsArticles: MutableList<Article>){
-        val homeNewsAdapter = HomeNewsAdapter(newsArticles)
+
+    private fun initRecyclerView(newsArticles: MutableList<ArticleEntry>){
+        val homeNewsAdapter = NewsAdapter(this@NewsFragment, newsArticles)
 
         news_recycler_view.apply {
             layoutManager = LinearLayoutManager(this@NewsFragment.context)
             adapter = homeNewsAdapter
+        }
+    }
+
+    override fun articleOptionSelected(bottomSheetItem: BottomSheetItem) {
+        when(bottomSheetItem){
+            BottomSheetItem.SAVE_ARTICLE -> {
+                //TODO viewmodel save article
+            }
+            BottomSheetItem.SHARE_ARTICLE -> {
+                val asdd = "sad"
+            }
+            BottomSheetItem.REDIRECT_TO_ARTICLE_WEBSITE -> {
+                val asdd = "sad"
+            }
+            BottomSheetItem.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
+                val asdd = "sad"
+            }
         }
     }
 

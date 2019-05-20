@@ -1,8 +1,8 @@
-package com.tstv.newsapp.ui.home_news.adapters
+package com.tstv.newsapp.ui.news.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.Drawable
-import android.opengl.Visibility
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -20,14 +20,19 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.LocalDateConverter
-import com.tstv.newsapp.data.db.entity.Article
+import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.internal.glide.GlideApp
+import com.tstv.newsapp.ui.news.NewsFragment
+import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment
 
-class HomeNewsAdapter(
-    private val dataList: MutableList<Article>
-): RecyclerView.Adapter<HomeNewsAdapter.BaseViewHolder<*>>() {
+class NewsAdapter(
+    private val newsFragment: NewsFragment,
+    private val dataList: MutableList<ArticleEntry>
+): RecyclerView.Adapter<NewsAdapter.BaseViewHolder<*>>() {
 
     private var currentViewID: Int = 0
+
+    private lateinit var context: Context
 
     companion object{
         private const val TYPE_INNER_RECYCLER_VIEW = 1
@@ -35,7 +40,8 @@ class HomeNewsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        val context = parent.context
+        context = parent.context
+
         return when(viewType){
             TYPE_ARTICLE_VIEW -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.adapter_item_news_article, parent, false)
@@ -58,8 +64,8 @@ class HomeNewsAdapter(
         val dataElement = dataList[position]
         (holder as ArticleViewHolder).bind(dataElement, (dataList.size - 1) == position)
 //        when(holder){
-//            is ArticleCardViewsViewHolder -> holder.bind(dataElement as List<Article>)
-//            is ArticleViewHolder -> holder.bind(dataElement as Article)
+//            is ArticleCardViewsViewHolder -> holder.bind(dataElement as List<ArticleEntry>)
+//            is ArticleViewHolder -> holder.bind(dataElement as ArticleEntry)
 //            else -> throw IllegalArgumentException()
 //        }
     }
@@ -70,7 +76,7 @@ class HomeNewsAdapter(
 //                currentViewID = TYPE_INNER_RECYCLER_VIEW
 //                TYPE_INNER_RECYCLER_VIEW
 //            }
-            is Article -> {
+            is ArticleEntry -> {
                 currentViewID = TYPE_ARTICLE_VIEW
                 TYPE_ARTICLE_VIEW
             }
@@ -91,32 +97,32 @@ class HomeNewsAdapter(
 //            true
 //    }
 
-    abstract class BaseViewHolder<T>(itemView: View): RecyclerView.ViewHolder(itemView){
+    abstract inner class BaseViewHolder<T>(itemView: View): RecyclerView.ViewHolder(itemView){
         abstract fun bind(item: T, isLastItem: Boolean)
     }
 
-    class ArticleCardViewsViewHolder(
+    inner class ArticleCardViewsViewHolder(
         private val view: View
-    ): BaseViewHolder<List<Article>>(view){
+    ): BaseViewHolder<List<ArticleEntry>>(view){
 
         private val cardViewsRecyclerView = view.findViewById<RecyclerView>(R.id.home_news_adapter_inner_recycler_view_item)
 
-        override fun bind(item: List<Article>, isLastItem: Boolean) {
+        override fun bind(item: List<ArticleEntry>, isLastItem: Boolean) {
             bindRecyclerView(item)
         }
 
-        private fun bindRecyclerView(articlesList: List<Article>){
+        private fun bindRecyclerView(articlesList: List<ArticleEntry>){
             cardViewsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-                val cardViewAdapter = HomeNewsCardViewAdapter(articlesList)
+                val cardViewAdapter = NewsCardViewAdapter(articlesList)
                 adapter = cardViewAdapter
             }
         }
     }
 
-    class ArticleViewHolder(
+    inner class ArticleViewHolder(
         val view: View
-    ): BaseViewHolder<Article>(view){
+    ): BaseViewHolder<ArticleEntry>(view){
 
         private val tvArticleTitle = view.findViewById<TextView>(R.id.tv_article_title)
         private val ivArticleImage = view.findViewById<ImageView>(R.id.iv_article_image)
@@ -128,9 +134,9 @@ class HomeNewsAdapter(
         private val cardView = view.findViewById<CardView>(R.id.cardView)
         private val dividerView = view.findViewById<View>(R.id.divider_line)
 
-        private lateinit var articleItem: Article
+        private lateinit var articleItem: ArticleEntry
 
-        override fun bind(item: Article, isLastItem: Boolean) {
+        override fun bind(item: ArticleEntry, isLastItem: Boolean) {
             resetViewsParams()
 
             articleItem = item
@@ -159,7 +165,6 @@ class HomeNewsAdapter(
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
-                .override(700, 500)
                 .placeholder(R.drawable.ic_check)
 
             GlideApp.with(view.context)
@@ -202,13 +207,16 @@ class HomeNewsAdapter(
         private fun bindViewsClickListeners(){
             ivSaveArticleToBookmark.setOnClickListener { //TODO
             }
-            ivArticleOptions.setOnClickListener { //TODO
-            }
+            ivArticleOptions.setOnClickListener { openOptionsBottomSheetDialog() }
 
             view.setOnClickListener { //TODO
             }
         }
 
-    }
+        private fun openOptionsBottomSheetDialog(){
+            val bottomSheetDialog = OptionsBottomSheetDialogFragment()
+            bottomSheetDialog.show(newsFragment.childFragmentManager, OptionsBottomSheetDialogFragment.TAG)
+        }
 
+    }
 }

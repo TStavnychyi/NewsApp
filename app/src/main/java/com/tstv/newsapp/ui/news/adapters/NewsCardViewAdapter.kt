@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.home_news.adapters
+package com.tstv.newsapp.ui.news.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
@@ -16,12 +16,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.LocalDateConverter
-import com.tstv.newsapp.data.db.entity.Article
+import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.internal.glide.GlideApp
 
-class HomeNewsCardViewAdapter(
-    private val articleList: List<Article>
-): RecyclerView.Adapter<HomeNewsCardViewAdapter.CardView_ViewHolder>() {
+class NewsCardViewAdapter(
+    private val articleList: List<ArticleEntry>
+): RecyclerView.Adapter<NewsCardViewAdapter.CardView_ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardView_ViewHolder {
@@ -49,7 +49,7 @@ class HomeNewsCardViewAdapter(
         private val tvArticlePublisher = view.findViewById<TextView>(R.id.tv_article_publisher_name)
         private val tvArticlePublishDate = view.findViewById<TextView>(R.id.tv_article_publish_date)
 
-        fun bind(article: Article){
+        fun bind(article: ArticleEntry){
             with(article){
                 tvArticlePublisher.text = author
                 tvArticleTitle.text = title
