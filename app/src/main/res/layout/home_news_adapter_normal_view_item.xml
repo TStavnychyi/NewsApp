@@ -84,7 +84,7 @@
             android:layout_width="@dimen/articles_view_additional_buttons_size"
             android:layout_height="@dimen/articles_view_additional_buttons_size"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_bookmark"
+            android:src="@drawable/ic_bookmark_unselected"
             android:layout_marginBottom="@dimen/home_news_article_item_options_buttons_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="@dimen/home_news_article_item_options_buttons_margin"

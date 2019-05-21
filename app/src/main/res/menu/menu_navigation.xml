@@ -17,7 +17,7 @@
             android:id="@+id/destination_bookmarks"
             app:showAsAction="ifRoom"
             android:title="Bookmarks"
-            android:icon="@drawable/ic_bookmark" />
+            android:icon="@drawable/ic_bookmark_unselected" />
 
     <item
             android:id="@+id/destination_interests"

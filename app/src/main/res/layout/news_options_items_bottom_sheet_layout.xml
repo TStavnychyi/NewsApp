@@ -8,7 +8,7 @@
     <LinearLayout
             android:id="@+id/save_article_option_view"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
             >
@@ -16,7 +16,7 @@
         <ImageView
                 android:layout_width="@dimen/news_options_menu_item_image_size"
                 android:layout_height="@dimen/news_options_menu_item_image_size"
-                android:src="@drawable/ic_bookmark"
+                android:src="@drawable/ic_bookmark_unselected"
                 android:layout_marginStart="@dimen/news_options_menu_item_horizontal_margin"
                 />
 
@@ -34,7 +34,7 @@
     <LinearLayout
             android:id="@+id/share_article_option_view"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
             >
@@ -60,7 +60,7 @@
     <LinearLayout
             android:id="@+id/redirect_to_article_website_option_view"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
             >
@@ -86,7 +86,7 @@
     <LinearLayout
             android:id="@+id/hide_source_article_option_view"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
             android:layout_marginBottom="@dimen/news_options_menu_item_vertical_margin"

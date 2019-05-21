@@ -28,6 +28,10 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
 
     private lateinit var viewModel: NewsViewModel
 
+    private lateinit var articlesList: MutableList<ArticleEntry>
+
+    private lateinit var newsCategory: String
+
     companion object{
         private const val NEWS_CATEGORY = "news_category"
 
@@ -40,11 +44,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
                 )
             }
         }
-
-
     }
-
-    private lateinit var newsCategory: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +73,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     }
 
     private fun bindUI() = launch(Dispatchers.Main) {
-        val articlesList = viewModel.getNewsArticlesAsync(newsCategory).await().articles.toMutableList()
+        articlesList = viewModel.getNewsArticlesAsync(newsCategory).await().articles.toMutableList()
 
         initRecyclerView(articlesList)
 
@@ -89,19 +89,17 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         }
     }
 
-    override fun articleOptionSelected(bottomSheetItem: BottomSheetItem) {
-        when(bottomSheetItem){
-            BottomSheetItem.SAVE_ARTICLE -> {
-                //TODO viewmodel save article
+    override fun articleOptionSelected(bottomSheetSelectedItemAction: BottomSheetSelectedItemAction, selectedPosition: Int) = launch(Dispatchers.IO) {
+        when(bottomSheetSelectedItemAction){
+            BottomSheetSelectedItemAction.SAVE_ARTICLE -> {
+                val articleItem = articlesList[selectedPosition]
+                viewModel.saveNewsArticleToDbAsync(articleItem)
             }
-            BottomSheetItem.SHARE_ARTICLE -> {
-                val asdd = "sad"
+            BottomSheetSelectedItemAction.SHARE_ARTICLE -> {
             }
-            BottomSheetItem.REDIRECT_TO_ARTICLE_WEBSITE -> {
-                val asdd = "sad"
+            BottomSheetSelectedItemAction.REDIRECT_TO_ARTICLE_WEBSITE -> {
             }
-            BottomSheetItem.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
-                val asdd = "sad"
+            BottomSheetSelectedItemAction.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
             }
         }
     }

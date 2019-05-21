@@ -57,7 +57,7 @@ class NewsCardViewAdapter(
                 if(urlToImage != null && urlToImage.isEmpty())
                     ivArticleImage.visibility = View.GONE
                 else
-                    setupGlide(urlToImage)
+                    setupGlide(urlToImage!!)
             }
         }
 

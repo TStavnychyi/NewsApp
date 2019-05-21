@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 
-@Database(entities = [SelectedNewsCategoriesEntry::class, ArticleEntry::class], version = 2)
+@Database(entities = [SelectedNewsCategoriesEntry::class, ArticleEntry::class], version = 1)
 abstract class NewsDatabase : RoomDatabase(){
 
     abstract fun selectedNewsCategoriesDao(): SelectedNewsCategoriesDao

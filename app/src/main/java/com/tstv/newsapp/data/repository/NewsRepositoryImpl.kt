@@ -15,18 +15,6 @@ class NewsRepositoryImpl(
     private val newsApiService: NewsApiService
 ) : NewsRepository {
 
-//    override suspend fun getMixedNewsArticlesBasedOnSelectedCategoriesAsync(): Deferred<List<ArticleEntry>> {
-//        val selectedNewsCategoriesList = selectedNewsCategoriesDao.getAllSelectedNewsCategories()
-//
-    // sources
-//        //popular
-//
-//        //bookmarks
-//
-//        //other categories
-//        val
-//    }
-
     override suspend fun saveNewsArticleToDbAsync(newsArticleEntry: ArticleEntry) = savedNewsArticlesDao.upsert(newsArticleEntry)
 
     override suspend fun getNewsArticlesAsync(category: String): Deferred<NewsResponse> {
@@ -38,11 +26,6 @@ class NewsRepositoryImpl(
         Thread(Runnable {
             selectedNewsCategoriesDao.deleteAllSelectedNewsCategories()
             selectedNewsCategoriesDao.insert(selectedNewsInterests)
-
-            val table = selectedNewsCategoriesDao.getAllSelectedNewsCategories()
-            Log.e("TAG", "HEllo")
         }).start()
     }
-
-
 }
