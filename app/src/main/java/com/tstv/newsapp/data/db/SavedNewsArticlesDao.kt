@@ -1,5 +1,6 @@
 package com.tstv.newsapp.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,10 +14,10 @@ interface SavedNewsArticlesDao {
     fun upsert(articleEntry: ArticleEntry)
 
     @Query("select * from saved_news_articles")
-    fun getAllSavedNewsArticles(): List<ArticleEntry>
+    fun getAllSavedNewsArticles(): LiveData<List<ArticleEntry>>
 
     @Query("select * from saved_news_articles where id = :articleID")
-    fun getSavedNewsArticleByID(articleID: Int): ArticleEntry
+    fun getSavedNewsArticleByID(articleID: Int): LiveData<ArticleEntry>
 
     @Query("delete from saved_news_articles where id = :articleID")
     fun removeNewsArticleByID(articleID: Int)

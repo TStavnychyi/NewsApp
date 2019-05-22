@@ -22,12 +22,12 @@ import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.LocalDateConverter
 import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.internal.glide.GlideApp
-import com.tstv.newsapp.ui.news.NewsFragment
-import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment
+import com.tstv.newsapp.ui.news.fragments.NewsFragment
+import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog
 
 class NewsAdapter(
     private val newsFragment: NewsFragment,
-    private val dataList: MutableList<ArticleEntry>
+    private val dataList: List<ArticleEntry>
 ): RecyclerView.Adapter<NewsAdapter.BaseViewHolder<*>>() {
 
     private var currentViewID: Int = 0
@@ -158,8 +158,8 @@ class NewsAdapter(
                 dividerView.visibility = View.VISIBLE
 
             fun openOptionsBottomSheetDialog(){
-                val bottomSheetDialog = OptionsBottomSheetDialogFragment.newInstance(adapterItemPosition)
-                bottomSheetDialog.show(newsFragment.childFragmentManager, OptionsBottomSheetDialogFragment.TAG)
+                val bottomSheetDialog = OptionsBottomSheetDialog.newInstance(adapterItemPosition)
+                bottomSheetDialog.show(newsFragment.childFragmentManager, OptionsBottomSheetDialog.TAG)
             }
 
             fun bindViewsClickListeners(){

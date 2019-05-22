@@ -1,6 +1,5 @@
 package com.tstv.newsapp.ui.interests
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +7,18 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.tstv.newsapp.R
-import com.tstv.newsapp.ui.interests.NewsCategoriesAdapter.*
+import com.tstv.newsapp.ui.base.ScopedFragment
+import com.tstv.newsapp.ui.interests.NewsCategoriesAdapter.Category
 import kotlinx.android.synthetic.main.news_interests_fragment.*
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
-class NewsCategoriesFragment : Fragment(), KodeinAware {
+class NewsCategoriesFragment : ScopedFragment(), KodeinAware {
 
     override val kodein by closestKodein()
     private val viewModelFactory: NewsCategoriesViewModelFactory by instance()
@@ -50,7 +50,9 @@ class NewsCategoriesFragment : Fragment(), KodeinAware {
         if (newsCategoriesAdapter.selectedPositions.isEmpty()) {
             Toast.makeText(context, getString(R.string.no_interesting_topic_selected_warning), Toast.LENGTH_SHORT).show()
         }else{
-            viewModel.saveNewsInterestsToDB(newsCategoriesAdapter.selectedPositions)
+            launch {
+                viewModel.saveNewsInterestsToDB(newsCategoriesAdapter.selectedPositions)
+            }
             navigateToMainActivity()
         }
     }

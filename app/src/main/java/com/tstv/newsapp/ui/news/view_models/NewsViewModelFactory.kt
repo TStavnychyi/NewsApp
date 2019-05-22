@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.news
+package com.tstv.newsapp.ui.news.view_models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

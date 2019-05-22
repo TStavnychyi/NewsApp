@@ -11,7 +11,7 @@ class NewsCategoriesViewModel(
     private val applicationContext: Application
 ) : AndroidViewModel(applicationContext) {
 
-    fun saveNewsInterestsToDB(newsInterestsIdList: List<Int>){
+    suspend fun saveNewsInterestsToDB(newsInterestsIdList: List<Int>){
         val newsInterestsEntries = mutableListOf<SelectedNewsCategoriesEntry>()
         for (id in newsInterestsIdList) {
             newsInterestsEntries.add(SelectedNewsCategoriesEntry(id))

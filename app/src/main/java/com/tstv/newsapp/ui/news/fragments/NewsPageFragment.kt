@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.news
+package com.tstv.newsapp.ui.news.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

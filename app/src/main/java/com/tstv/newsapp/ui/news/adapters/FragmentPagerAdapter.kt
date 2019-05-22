@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.tstv.newsapp.data.db.entity.ArticleCategory
-import com.tstv.newsapp.ui.news.NewsFragment
+import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class FragmentPagerAdapter(
     private val context: Context,

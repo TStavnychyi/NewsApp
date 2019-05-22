@@ -1,4 +1,4 @@
-package com.tstv.newsapp.ui.news
+package com.tstv.newsapp.ui.news.dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -10,19 +10,19 @@ import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tstv.newsapp.R
-import com.tstv.newsapp.ui.news.OptionsBottomSheetDialogFragment.ArticleOptionsBottomSheetListener.BottomSheetSelectedItemAction.*
+import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsBottomSheetListener.BottomSheetSelectedItemAction.*
 import kotlinx.android.synthetic.main.news_options_items_bottom_sheet_layout.*
 import kotlinx.coroutines.Job
 
 
-class OptionsBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class OptionsBottomSheetDialog : BottomSheetDialogFragment() {
 
     companion object{
         const val TAG = "news_article_options_bottom_sheet"
         const val SELECTED_POSITION_ARG = "selected_position_arg"
 
-        fun newInstance(selectedPosition: Int): OptionsBottomSheetDialogFragment{
-            return OptionsBottomSheetDialogFragment().apply {
+        fun newInstance(selectedPosition: Int): OptionsBottomSheetDialog {
+            return OptionsBottomSheetDialog().apply {
                 arguments = bundleOf(
                     SELECTED_POSITION_ARG to selectedPosition
                 )
@@ -75,21 +75,25 @@ class OptionsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         save_article_option_view.setOnClickListener {
             if (selectedPosition >= 0)
                 optionsClickListeners?.articleOptionSelected(SAVE_ARTICLE, selectedPosition)
+            this.dismiss()
         }
 
         share_article_option_view.setOnClickListener {
             if (selectedPosition >= 0)
                 optionsClickListeners?.articleOptionSelected(SHARE_ARTICLE, selectedPosition)
+            this.dismiss()
         }
 
         redirect_to_article_website_option_view.setOnClickListener {
             if (selectedPosition >= 0)
                 optionsClickListeners?.articleOptionSelected(REDIRECT_TO_ARTICLE_WEBSITE, selectedPosition)
+            this.dismiss()
         }
 
         hide_source_article_option_view.setOnClickListener {
             if (selectedPosition >= 0)
                 optionsClickListeners?.articleOptionSelected(HIDE_ARTICLE_FROM_THAT_SOURCE, selectedPosition)
+            this.dismiss()
         }
     }
 }
