@@ -8,16 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.LocalDateConverter
 import com.tstv.newsapp.data.db.entity.ArticleEntry
-import com.tstv.newsapp.internal.glide.GlideApp
+import javax.sql.DataSource
 
 class NewsCardViewAdapter(
     private val articleList: List<ArticleEntry>
@@ -66,23 +65,10 @@ class NewsCardViewAdapter(
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
 
-            GlideApp.with(view.context)
+            Glide.with(view.context)
                 .load(imageUrlToDownload)
                 .apply(requestOptions)
-                .listener(object: RequestListener<Drawable> {
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean
-                    ): Boolean {
-                        ivArticleImage.setImageDrawable(resource)
-                        return true
-                    }
-
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean
-                    ): Boolean {
-                        ivArticleImage.visibility = View.GONE
-                        return true
-                    }
-
-                }).into(ivArticleImage)
+                .into(ivArticleImage)
         }
 
 

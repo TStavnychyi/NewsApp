@@ -2,7 +2,7 @@ package com.tstv.newsapp.ui.news.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -12,18 +12,14 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.LocalDateConverter
 import com.tstv.newsapp.data.db.entity.ArticleEntry
-import com.tstv.newsapp.internal.glide.GlideApp
-import com.tstv.newsapp.ui.news.fragments.NewsFragment
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog
+import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class NewsAdapter(
     private val newsFragment: NewsFragment,
@@ -145,11 +141,13 @@ class NewsAdapter(
                 tvArticlePublisher.text = author
                 parseAndSetDateToView(publishedAt)
 
-                if(urlToImage != null && urlToImage.isEmpty()){
+                if(urlToImage.isNullOrEmpty()){
                     handleImageAbsence(content)
                 }
-                else
+                else {
+                    Log.e("NewsAdapter", "argument URL : $urlToImage")
                     setupGlide(urlToImage!!)
+                }
             }
 
             if ((dataList.size - 1) == adapterItemPosition)
@@ -175,26 +173,13 @@ class NewsAdapter(
         private fun setupGlide(imageUrlToDownload: String){
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .placeholder(R.drawable.ic_check)
+                .fitCenter()
+                .override(ivArticleImage.width, ivArticleImage.height)
 
-            GlideApp.with(view.context)
+            Glide.with(view.context)
                 .load(imageUrlToDownload)
                 .apply(requestOptions)
-                .listener(object: RequestListener<Drawable>{
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean
-                    ): Boolean {
-                        ivArticleImage.setImageDrawable(resource)
-                        return true
-                    }
-
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean
-                    ): Boolean {
-                        handleImageAbsence(articleItem.content)
-                        return true
-                    }
-
-                }).into(ivArticleImage)
+                .into(ivArticleImage)
         }
 
         @SuppressLint("SetTextI18n")
