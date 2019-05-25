@@ -3,6 +3,7 @@ package com.tstv.newsapp.data.db.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.tstv.newsapp.data.pojo.Source
 
 @Entity(tableName = "saved_news_articles")
 data class ArticleEntry(

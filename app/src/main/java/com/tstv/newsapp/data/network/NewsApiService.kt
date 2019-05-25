@@ -1,11 +1,10 @@
 package com.tstv.newsapp.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.tstv.newsapp.data.db.entity.NewsResponse
+import com.tstv.newsapp.data.network.response.NewsResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

@@ -1,6 +1,7 @@
-package com.tstv.newsapp.data.db.entity
+package com.tstv.newsapp.data.network.response
 
 import com.google.gson.annotations.SerializedName
+import com.tstv.newsapp.data.db.entity.ArticleEntry
 
 data class NewsResponse(
     @SerializedName("articles")

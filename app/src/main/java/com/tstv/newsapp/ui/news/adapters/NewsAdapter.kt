@@ -22,7 +22,7 @@ import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class NewsAdapter(
     private val newsFragment: NewsFragment,
-    private val dataList: List<ArticleEntry>
+    private var dataList: MutableList<ArticleEntry>
 ): RecyclerView.Adapter<NewsAdapter.BaseViewHolder<*>>() {
 
     private var currentViewID: Int = 0
@@ -79,6 +79,18 @@ class NewsAdapter(
                 throw IllegalArgumentException("Invalid type of data in $position position")
             }
         }
+    }
+
+    fun removeNewsArticlesOfHiddenSource(sourceID: String){
+        val sortedList = dataList.filter {
+            it.source?.sourceID != sourceID
+        }.toMutableList()
+        dataList = sortedList
+    }
+
+    fun setAdapterDataList(list: MutableList<ArticleEntry>) {
+        dataList = list
+        notifyDataSetChanged()
     }
 
 //    private fun checkIfArticleContentValid(contentText: String?, position: Int): Boolean{

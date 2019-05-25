@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
+import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
 import com.tstv.newsapp.ui.news.adapters.NewsAdapter
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsBottomSheetListener
@@ -34,9 +36,11 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
 
     private lateinit var viewModel: NewsViewModel
 
-    private lateinit var articlesList: List<ArticleEntry>
+    private lateinit var articlesList: MutableList<ArticleEntry>
 
     private lateinit var newsCategory: String
+
+    private lateinit var newsAdapter: NewsAdapter
 
     companion object{
         private const val NEWS_CATEGORY = "news_category"
@@ -81,19 +85,19 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     private fun bindUI() = launch(Dispatchers.Main) {
         val newsArticlesLiveData = viewModel.getNewsArticlesAsync(newsCategory)
         newsArticlesLiveData.observe(this@NewsFragment, Observer {
-            articlesList = newsArticlesLiveData.value!!
-            initRecyclerView(newsArticlesLiveData.value!!)
+            articlesList = newsArticlesLiveData.value!!.toMutableList()
+            initRecyclerView(articlesList)
             news_group_loading_bar.visibility = View.GONE
         })
 
     }
 
-    private fun initRecyclerView(newsArticles: List<ArticleEntry>){
-        val homeNewsAdapter = NewsAdapter(this@NewsFragment, newsArticles)
+    private fun initRecyclerView(newsArticles: MutableList<ArticleEntry>){
+        newsAdapter = NewsAdapter(this@NewsFragment, newsArticles)
 
         news_recycler_view.apply {
             layoutManager = LinearLayoutManager(this@NewsFragment.context)
-            adapter = homeNewsAdapter
+            adapter = newsAdapter
         }
     }
 
@@ -113,8 +117,38 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
                 }
             }
             BottomSheetSelectedItemAction.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
+                val hiddenSourceEntry = HiddenSourcesEntry(source = articleEntry.source!!)
+                viewModel.saveNewsSourceIntoHidden(hiddenSourceEntry)
+                launch(Dispatchers.Main) {
+                    with(hiddenSourceEntry) {
+                        removeItemFromAdapter(source.sourceID)
+                        showMessageOfSuccessRemoveSourceWithCancelAction(source.name, source.sourceID)
+                    }
+                }
             }
         }
+    }
+
+    private fun showMessageOfSuccessRemoveSourceWithCancelAction(sourceName: String, sourceID: String){
+        val message = "All news from source \"$sourceName\" was successfully hidden"
+        showSnackbarWithAction(message) {
+            launch(Dispatchers.Main) {
+                viewModel.removeHiddenNewsSourceFromDB(sourceID)
+                val newsArticlesLiveData = viewModel.getNewsArticlesAsync(newsCategory)
+                newsArticlesLiveData.observeOnce(this@NewsFragment, Observer {
+                    newsAdapter.setAdapterDataList(it.toMutableList())
+                })
+            }
+        }
+    }
+
+    private fun showSnackbarWithAction(message: String, action: (view: View) -> Unit){
+        val snackBar = Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).setAction("Cancel", action).show()
+    }
+
+    private fun removeItemFromAdapter(sourceID: String){
+        newsAdapter.removeNewsArticlesOfHiddenSource(sourceID)
+        newsAdapter.notifyDataSetChanged()
     }
 
     private fun shareContent(articleEntry: ArticleEntry){

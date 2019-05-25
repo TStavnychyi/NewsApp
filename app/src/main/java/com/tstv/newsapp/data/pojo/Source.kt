@@ -1,4 +1,4 @@
-package com.tstv.newsapp.data.db.entity
+package com.tstv.newsapp.data.pojo
 
 import com.google.gson.annotations.SerializedName
 

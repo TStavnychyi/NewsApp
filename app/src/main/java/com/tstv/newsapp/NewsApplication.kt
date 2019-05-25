@@ -24,8 +24,9 @@ class NewsApplication: Application(), KodeinAware {
         bind() from singleton { NewsDatabase(instance()) }
         bind() from singleton { instance<NewsDatabase>().selectedNewsCategoriesDao() }
         bind() from singleton { instance<NewsDatabase>().savedNewsArticleDao() }
+        bind() from singleton { instance<NewsDatabase>().hiddenSourcesDao() }
 
-        bind<NewsRepository>() with singleton { NewsRepositoryImpl(instance(), instance(), instance()) }
+        bind<NewsRepository>() with singleton { NewsRepositoryImpl(instance(), instance(), instance(), instance()) }
 
         //VIEW MODELS
         bind() from provider {NewsCategoriesViewModelFactory(instance(), instance())}

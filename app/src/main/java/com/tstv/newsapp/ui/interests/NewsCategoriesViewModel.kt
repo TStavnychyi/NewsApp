@@ -2,7 +2,7 @@ package com.tstv.newsapp.ui.interests
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.tstv.newsapp.data.db.entity.SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED
+import com.tstv.newsapp.data.network.response.SHARED_PREF_KEY_IS_NEWS_TOPICS_SELECTED
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 import com.tstv.newsapp.data.repository.NewsRepository
 
