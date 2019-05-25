@@ -3,11 +3,43 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@id/destination_news_fragment">
+            app:startDestination="@id/destination_news_page_fragment">
 
     <fragment
-            android:id="@+id/destination_news_fragment"
+            android:id="@+id/destination_news_page_fragment"
             android:name="com.tstv.newsapp.ui.news.fragments.NewsPageFragment"
             android:label="News"
-            tools:layout="@layout/news_page_fragment"/>
+            tools:layout="@layout/news_page_fragment">
+        <action
+                android:id="@+id/action_to_source_news_fragment"
+                app:destination="@id/destination_source_news_fragment"/>
+        <action
+                android:id="@+id/action_from_news_to_article_options_dialog"
+                app:destination="@id/destination_article_options_bottom_dialog"/>
+    </fragment>
+    <fragment
+            android:id="@+id/destination_source_news_fragment"
+            android:name="com.tstv.newsapp.ui.news.fragments.SourceNewsFragment"
+            android:label="SourceNewsFragment"
+            tools:layout="@layout/fragment_source_news">
+        <argument
+                android:name="source_id_arg"
+                app:argType="string"/>
+        <argument
+                android:name="source_name_arg"
+                app:argType="string"/>
+    </fragment>
+    <fragment
+            android:id="@+id/destination_article_options_bottom_dialog"
+            android:name="com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog"
+            android:label="OptionsBottomSheetDialog">
+        <argument
+                android:name="source_name_arg"
+                app:argType="string"
+                app:nullable="true"/>
+        <argument
+                android:name="selected_item_position_arg"
+                app:argType="integer"/>
+    </fragment>
+
 </navigation>

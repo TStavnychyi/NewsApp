@@ -10,7 +10,7 @@
     <string name="news_options_menu_save_item_title">Save</string>
     <string name="news_options_menu_share_item_title">Share</string>
     <string name="news_options_menu_hide_item_title">Hide all news from source</string>
-    <string name="news_options_menu_redirect_item_title">Go to website</string>
+    <string name="news_options_menu_redirect_item_title">See all news from</string>
     <string name="share_content_dialog_title">Share</string>
 
     <string-array name="interests_categories">

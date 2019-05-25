@@ -1,16 +1,15 @@
 package com.tstv.newsapp.ui.news.adapters
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.tstv.newsapp.data.db.entity.ArticleCategory
 import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class FragmentPagerAdapter(
-    private val context: Context,
     fragmentManager: FragmentManager
-) : FragmentStatePagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager) {
 
     private val fragmentList = listOf(
         NewsFragment.newsInstance( ArticleCategory.POLITICS.value),

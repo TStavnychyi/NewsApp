@@ -2,7 +2,6 @@ package com.tstv.newsapp.ui.news.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -138,14 +137,13 @@ class NewsAdapter(
 
             with(item){
                 tvArticleTitle.text = title
-                tvArticlePublisher.text = author
+                tvArticlePublisher.text = source?.name ?: author
                 parseAndSetDateToView(publishedAt)
 
                 if(urlToImage.isNullOrEmpty()){
                     handleImageAbsence(content)
                 }
                 else {
-                    Log.e("NewsAdapter", "argument URL : $urlToImage")
                     setupGlide(urlToImage!!)
                 }
             }
@@ -156,12 +154,17 @@ class NewsAdapter(
                 dividerView.visibility = View.VISIBLE
 
             fun openOptionsBottomSheetDialog(){
-                val bottomSheetDialog = OptionsBottomSheetDialog.newInstance(adapterItemPosition)
+                var sourceName: String? = null
+                if(!articleItem.source?.sourceID.isNullOrEmpty()){
+                    sourceName = articleItem.source?.name
+                }
+                val bottomSheetDialog = OptionsBottomSheetDialog.newInstance(sourceName, adapterItemPosition)
                 bottomSheetDialog.show(newsFragment.childFragmentManager, OptionsBottomSheetDialog.TAG)
             }
 
             fun bindViewsClickListeners(){
-                ivArticleOptions.setOnClickListener { openOptionsBottomSheetDialog() }
+                ivArticleOptions.setOnClickListener {
+                    openOptionsBottomSheetDialog() }
 
                 view.setOnClickListener { //TODO open detail view
                 }
@@ -173,8 +176,10 @@ class NewsAdapter(
         private fun setupGlide(imageUrlToDownload: String){
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
+                .centerCrop()
                 .override(ivArticleImage.width, ivArticleImage.height)
+                .placeholder(R.drawable.image_placeholder)
+
 
             Glide.with(view.context)
                 .load(imageUrlToDownload)

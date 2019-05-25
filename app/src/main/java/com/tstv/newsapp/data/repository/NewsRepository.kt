@@ -2,9 +2,7 @@ package com.tstv.newsapp.data.repository
 
 import androidx.lifecycle.LiveData
 import com.tstv.newsapp.data.db.entity.ArticleEntry
-import com.tstv.newsapp.data.db.entity.NewsResponse
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
-import kotlinx.coroutines.Deferred
 
 interface NewsRepository {
 
@@ -15,5 +13,7 @@ interface NewsRepository {
     suspend fun saveNewsArticleToDbAsync(newsArticleEntry: ArticleEntry)
 
     suspend fun getNewsArticleByIdAsync(id: Int): LiveData<ArticleEntry>
+
+    suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<ArticleEntry>>
 
 }

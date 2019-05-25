@@ -18,8 +18,7 @@ class NewsPageFragment : ScopedFragment() {
         return inflater.inflate(R.layout.news_page_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bindUI()
     }
 
@@ -30,9 +29,9 @@ class NewsPageFragment : ScopedFragment() {
 
     private fun initAdapter(){
         view_pager.offscreenPageLimit = 1
-        fragmentManager?.let {
+        childFragmentManager?.let {
                 fragmentManager ->
-            FragmentPagerAdapter(context!!, fragmentManager).also {
+            FragmentPagerAdapter(fragmentManager).also {
                 view_pager.adapter = it
             }
         }

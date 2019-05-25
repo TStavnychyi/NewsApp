@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
+            android:layout_marginBottom="@dimen/news_options_menu_item_vertical_margin"
             >
 
         <ImageView
@@ -36,7 +37,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
+            android:layout_marginBottom="@dimen/news_options_menu_item_vertical_margin"
             >
 
         <ImageView
@@ -62,7 +63,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
+            android:layout_marginBottom="@dimen/news_options_menu_item_vertical_margin"
             >
 
         <ImageView
@@ -73,6 +74,7 @@
                 />
 
         <TextView
+                android:id="@+id/tv_show_news_from_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/news_options_menu_redirect_item_title"
@@ -88,7 +90,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_options_menu_item_vertical_margin"
             android:layout_marginBottom="@dimen/news_options_menu_item_vertical_margin"
             >
 
@@ -100,6 +101,7 @@
                 />
 
         <TextView
+                android:id="@+id/tv_hide_news_from_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/news_options_menu_hide_item_title"

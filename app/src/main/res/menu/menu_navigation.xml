@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/destination_news_fragment"
+            android:id="@+id/destination_news_page_fragment"
             app:showAsAction="ifRoom"
             android:title="News"
             android:icon="@drawable/ic_home_black" />

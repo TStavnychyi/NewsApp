@@ -16,6 +16,14 @@ class NewsRepositoryImpl(
     private val newsApiService: NewsApiService
 ) : NewsRepository {
 
+
+    override suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<ArticleEntry>> {
+        val response = newsApiService.getNewsBySourceAsync(source = sourceName).await()
+        val data = MutableLiveData<List<ArticleEntry>>()
+        data.postValue(response.articles)
+        return data
+    }
+
     override suspend fun saveNewsInterestsToDB(selectedNewsInterests: List<SelectedNewsCategoriesEntry>) {
         selectedNewsCategoriesDao.deleteAllSelectedNewsCategories()
         selectedNewsCategoriesDao.insert(selectedNewsInterests)

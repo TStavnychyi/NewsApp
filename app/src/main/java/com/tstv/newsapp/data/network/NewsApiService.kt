@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val API_KEY = "1adcd40902fc456492c6416c3d5c4eb6"
+const val API_KEY = "6df7efea9dab4b45a825a2e27e0fc40d"
 
 // https://newsapi.org/v2/top-headlines?country=ua&category=business&apiKey=1adcd40902fc456492c6416c3d5c4eb6
 
@@ -21,6 +21,11 @@ interface NewsApiService {
     fun getNewsByCountryAndCategoryAsync (
         @Query("country") country: String = "us",
         @Query("category") category: String
+    ): Deferred<NewsResponse>
+
+    @GET("top-headlines")
+    fun getNewsBySourceAsync (
+        @Query("sources") source: String
     ): Deferred<NewsResponse>
 
     companion object {

@@ -17,6 +17,7 @@
     <dimen name="news_options_menu_item_vertical_margin">16dp</dimen>
     <dimen name="news_options_menu_item_text_size">14sp</dimen>
     <dimen name="news_options_menu_item_image_size">22dp</dimen>
+    <dimen name="source_title_text_size">24sp</dimen>
 
 
     <!-- -->

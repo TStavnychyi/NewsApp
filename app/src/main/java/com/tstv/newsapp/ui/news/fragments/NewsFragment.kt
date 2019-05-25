@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.ArticleEntry
@@ -96,16 +98,19 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     }
 
     override fun articleOptionSelected(bottomSheetSelectedItemAction: BottomSheetSelectedItemAction, selectedPosition: Int) = launch(Dispatchers.IO) {
+        val articleEntry = articlesList[selectedPosition]
         when(bottomSheetSelectedItemAction){
             BottomSheetSelectedItemAction.SAVE_ARTICLE -> {
-                val articleItem = articlesList[selectedPosition]
-                viewModel.saveNewsArticleToDbAsync(articleItem)
+                viewModel.saveNewsArticleToDbAsync(articleEntry)
             }
             BottomSheetSelectedItemAction.SHARE_ARTICLE -> {
-                val articleEntry = articlesList[selectedPosition]
                 shareContent(articleEntry)
             }
-            BottomSheetSelectedItemAction.REDIRECT_TO_ARTICLE_WEBSITE -> {
+            BottomSheetSelectedItemAction.SHOW_NEWS_FROM_THIS_SOURCE -> {
+                with(articleEntry.source!!){
+                    val action = NewsPageFragmentDirections.actionToSourceNewsFragment(sourceID, name)
+                    findNavController().navigate(action)
+                }
             }
             BottomSheetSelectedItemAction.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
             }
