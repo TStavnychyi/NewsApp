@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.repository.NewsRepository
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.AbsentLiveData
 
 class NewsViewModel(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
-
 
     private val _category = MutableLiveData<String>()
     val category: LiveData<String>
@@ -28,7 +28,6 @@ class NewsViewModel(
             }
         }
 
-
     fun setCategory(category: String?){
         if(_category.value != category){
             _category.value = category
@@ -41,14 +40,11 @@ class NewsViewModel(
         }
     }
 
-
     suspend fun getNewsArticlesFromDb(category: String) = newsRepository.getNewsArticlesFromDb(category)
 
     suspend fun getNewsArticleByIdAsync(id: Int) = newsRepository.getNewsArticleByIdAsync(id)
 
-    suspend fun saveNewsArticleToDbAsync(article: Article){
-        newsRepository.addArticleToBookmarks(article)
-    }
+    suspend fun saveArticleBookmark(article: BookmarksArticle) = newsRepository.saveArticleBookmark(article)
 
     suspend fun saveNewsSourceIntoHidden(hiddenSourcesEntry: HiddenSourcesEntry) = newsRepository.addNewsSourceIntoHiddenList(hiddenSourcesEntry)
 

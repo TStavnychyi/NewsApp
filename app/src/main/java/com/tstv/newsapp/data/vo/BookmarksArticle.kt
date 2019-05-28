@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "bookmarks_articles")
-data class BookmarksArticles(
+data class BookmarksArticle(
     @PrimaryKey(autoGenerate = true)
     override val id: Int?,
     override val author: String?,
@@ -19,4 +19,10 @@ data class BookmarksArticles(
     override val urlToImage: String?,
     override val bookmark: Boolean,
     override var category: String?
-) : IArticle
+) : IArticle {
+
+    constructor(article: Article): this(
+        article.id, article.author, article.content, article.description, article.publishedAt, article.source,
+        article.title, article.url, article.urlToImage, article.bookmark, article.category
+    )
+}

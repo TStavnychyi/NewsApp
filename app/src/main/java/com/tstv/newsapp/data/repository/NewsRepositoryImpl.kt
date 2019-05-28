@@ -10,6 +10,7 @@ import com.tstv.newsapp.data.network.NewsApiService
 import com.tstv.newsapp.data.network.response.ApiResponse
 import com.tstv.newsapp.data.network.response.NewsResponse
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.ContextProviders
 import kotlinx.coroutines.Dispatchers
@@ -46,10 +47,7 @@ class NewsRepositoryImpl(
         }.asLiveData()
     }
 
-    override suspend fun getNewsArticlesFromDb(category: String): LiveData<List<Article>> {
-        val asd = newsDao.getAllTempNewsArticles()
-        return newsDao.getAllTempArticlesByCategory(category)
-    }
+    override suspend fun getNewsArticlesFromDb(category: String) = newsDao.getAllTempArticlesByCategory(category)
 
     override suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<Article>> {
         return withContext(Dispatchers.IO) {
@@ -91,9 +89,9 @@ class NewsRepositoryImpl(
         }
     }
 
-    override suspend fun addArticleToBookmarks(newsArticle: Article) {
+    override suspend fun saveArticleBookmark(article: BookmarksArticle) {
         withContext(Dispatchers.IO){
-            newsDao.insertTempArticle(newsArticle) }
+            newsDao.insertBookmarkArticle(article) }
     }
 
     override suspend fun addNewsSourceIntoHiddenList(hiddenSourcesEntry: HiddenSourcesEntry) {

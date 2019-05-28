@@ -11,8 +11,9 @@ import com.tstv.newsapp.data.db.dao.SelectedNewsCategoriesDao
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.BookmarksArticle
 
-@Database(entities = [SelectedNewsCategoriesEntry::class, Article::class, HiddenSourcesEntry::class], version = 1)
+@Database(entities = [SelectedNewsCategoriesEntry::class, Article::class, HiddenSourcesEntry::class, BookmarksArticle::class], version = 1)
 @TypeConverters(LocalDateConverter::class)
 abstract class NewsDatabase : RoomDatabase(){
 

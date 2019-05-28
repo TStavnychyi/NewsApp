@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Status
 import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
@@ -100,7 +101,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
                 }
                 Status.ERROR -> {
                     Log.e(TAG, "News fetching error : ${it.message}")
-                    Toast.makeText(context!!, "Error occur while fetching news articles", Toast.LENGTH_LONG).show()
+                    showToast("Error occur while fetching news articles")
                     news_group_loading_bar.visibility = View.GONE
                 }
                 Status.LOADING -> { }
@@ -122,7 +123,9 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         val articleEntry = articlesList[selectedPosition]
         when(bottomSheetSelectedItemAction){
             BottomSheetSelectedItemAction.SAVE_ARTICLE -> {
-                viewModel.saveNewsArticleToDbAsync(articleEntry)
+                val articleBookmark = BookmarksArticle(articleEntry)
+                viewModel.saveArticleBookmark(articleBookmark)
+                showToast("Article was successfully saved")
             }
             BottomSheetSelectedItemAction.SHARE_ARTICLE -> {
                 shareContent(articleEntry)
@@ -149,7 +152,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         }
     }
 
-    private fun showMessageOfSuccessRemoveSourceWithCancelAction(sourceName: String, sourceID: String){
+    private fun showMessageOfSuccessRemoveSourceWithCancelAction(sourceName: String, sourceID: String) {
         val message = "All news from source \"$sourceName\" was successfully hidden"
         showSnackbarWithAction(message) {
             launch(Dispatchers.Main) {
@@ -163,7 +166,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     }
 
     private fun showSnackbarWithAction(message: String, action: (view: View) -> Unit){
-        val snackBar = Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).setAction("Cancel", action).show()
+        Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).setAction("Cancel", action).show()
     }
 
     private fun removeItemFromAdapter(sourceID: String){
@@ -179,7 +182,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
             if(!author.isNullOrEmpty())
                 shareText.append("$author: ")
 
-            if (!title.isEmpty()) {
+            if (title.isNotEmpty()) {
                 shareText.append("$title.")
                 shareText.append("\n")
             }
@@ -191,4 +194,9 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         startActivity(Intent.createChooser(myIntent, "Sharing news"))
     }
 
+    private fun showToast(message: String) {
+        launch(Dispatchers.Main) {
+            Toast.makeText(context!!, message, Toast.LENGTH_LONG).show()
+        }
+    }
 }

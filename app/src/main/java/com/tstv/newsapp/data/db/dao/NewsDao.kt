@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.BookmarksArticle
 
 @Dao
 interface NewsDao {
@@ -34,6 +35,16 @@ interface NewsDao {
     @Query("delete from news_articles where category = :category")
     fun removeTempNewsByCategory(category: String)
 
+    // BOOKMARKS ARTICLES
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertBookmarkArticle(bookmarksArticle: BookmarksArticle)
+
+    @Query("select * from bookmarks_articles")
+    fun getAllBookmarksArticles(): LiveData<List<Article>>
+
+    @Query("delete from bookmarks_articles where id = :articleID")
+    fun removeBookmarkArticle(articleID: Int)
 
     // HIDDEN NEWS SOURCES
 
