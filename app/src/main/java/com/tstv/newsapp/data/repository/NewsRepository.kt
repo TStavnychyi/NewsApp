@@ -1,9 +1,10 @@
 package com.tstv.newsapp.data.repository
 
 import androidx.lifecycle.LiveData
-import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
+import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.Resource
 
 interface NewsRepository {
 
@@ -11,18 +12,19 @@ interface NewsRepository {
 
     suspend fun saveNewsInterestsToDB(selectedNewsInterests: List<SelectedNewsCategoriesEntry>)
 
-    suspend fun getNewsArticlesAsync(category: String): LiveData<List<ArticleEntry>>
+    suspend fun addArticleToBookmarks(newsArticle: Article)
 
-    suspend fun saveNewsArticleToDbAsync(newsArticleEntry: ArticleEntry)
+    suspend fun getNewsArticleByIdAsync(id: Int): LiveData<Article>
 
-    suspend fun getNewsArticleByIdAsync(id: Int): LiveData<ArticleEntry>
+    suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<Article>>
 
-    suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<ArticleEntry>>
-
-    suspend fun saveNewsSourceIntoHidden(hiddenSourcesEntry: HiddenSourcesEntry)
+    suspend fun addNewsSourceIntoHiddenList(hiddenSourcesEntry: HiddenSourcesEntry)
 
     suspend fun getAllHiddenNewsSources(): LiveData<List<HiddenSourcesEntry>>
 
     suspend fun removeHiddenNewsSourceFromDB(sourceID: String)
 
+    fun getNewsArticlesAsync(category: String): LiveData<Resource<List<Article>>>
+
+    suspend fun getNewsArticlesFromDb(category: String): LiveData<List<Article>>
 }

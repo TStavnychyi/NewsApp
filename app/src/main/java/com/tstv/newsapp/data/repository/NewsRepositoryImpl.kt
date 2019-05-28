@@ -2,27 +2,59 @@ package com.tstv.newsapp.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.tstv.newsapp.data.db.HiddenSourcesDao
-import com.tstv.newsapp.data.db.SavedNewsArticlesDao
-import com.tstv.newsapp.data.db.SelectedNewsCategoriesDao
-import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.db.dao.NewsDao
+import com.tstv.newsapp.data.db.dao.SelectedNewsCategoriesDao
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 import com.tstv.newsapp.data.network.NewsApiService
+import com.tstv.newsapp.data.network.response.ApiResponse
+import com.tstv.newsapp.data.network.response.NewsResponse
+import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.Resource
+import com.tstv.newsapp.internal.ContextProviders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NewsRepositoryImpl(
     private val selectedNewsCategoriesDao: SelectedNewsCategoriesDao,
-    private val savedNewsArticlesDao: SavedNewsArticlesDao,
-    private val hiddenSourcesDao: HiddenSourcesDao,
+    private val newsDao: NewsDao,
     private val newsApiService: NewsApiService
 ) : NewsRepository {
 
-    override suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<ArticleEntry>> {
+    val contextProviders = ContextProviders.getInstance()
+
+    override fun getNewsArticlesAsync(category: String): LiveData<Resource<List<Article>>> {
+        return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
+
+            override fun saveCallResult(item: NewsResponse) {
+                newsDao.removeTempNewsByCategory(category)
+
+                val filteredNewsArticles = filterFetchedNewsFromHiddenSources(item.articles)
+
+                for(article in filteredNewsArticles){
+                    article.category = category
+                }
+                newsDao.insertTempArticles(filteredNewsArticles)
+            }
+
+            override fun shouldFetch(data: List<Article>?): Boolean = true
+
+            override fun loadFromDb(): LiveData<List<Article>> = newsDao.getAllTempArticlesByCategory(category)
+
+            override fun createCall(): LiveData<ApiResponse<NewsResponse>> = newsApiService.getNewsByCountryAndCategoryAsync(category)
+
+        }.asLiveData()
+    }
+
+    override suspend fun getNewsArticlesFromDb(category: String): LiveData<List<Article>> {
+        val asd = newsDao.getAllTempNewsArticles()
+        return newsDao.getAllTempArticlesByCategory(category)
+    }
+
+    override suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<Article>> {
         return withContext(Dispatchers.IO) {
             val response = newsApiService.getNewsBySourceAsync(source = sourceName).await()
-            val data = MutableLiveData<List<ArticleEntry>>()
+            val data = MutableLiveData<List<Article>>()
             data.postValue(response.articles)
             data
         }
@@ -35,52 +67,45 @@ class NewsRepositoryImpl(
         }
     }
 
-    override suspend fun getNewsArticlesAsync(category: String): LiveData<List<ArticleEntry>> {
-        return withContext(Dispatchers.IO){
-            val hiddenSourcesList = hiddenSourcesDao.getAllHiddenSources()
-            val newsResponse = newsApiService.getNewsByCountryAndCategoryAsync(category = category.toLowerCase()).await()
-            val filteredNewsArticles = newsResponse.articles
-                .filter {
-                    if(hiddenSourcesList.isNullOrEmpty()) return@filter true
+    private fun filterFetchedNewsFromHiddenSources(list: List<Article>): List<Article>{
+        val hiddenSourcesList = newsDao.getAllHiddenSources()
+        return list
+            .filter {
+                if(hiddenSourcesList.isNullOrEmpty()) return@filter true
 
-                    var result = true
+                var result = true
 
-                    for(hiddenSource in hiddenSourcesList){
-                        if(it.source?.sourceID == hiddenSource.source?.sourceID) {
-                            result = false
-                            break
-                        }
+                for(hiddenSource in hiddenSourcesList){
+                    if(it.source?.sourceID == hiddenSource.sourceId) {
+                        result = false
+                        break
                     }
-                    return@filter result
                 }
-
-            val data = MutableLiveData<List<ArticleEntry>>()
-            data.postValue(filteredNewsArticles)
-            return@withContext data
-        }
+                return@filter result
+            }
     }
 
-    override suspend fun getNewsArticleByIdAsync(id: Int): LiveData<ArticleEntry> {
+    override suspend fun getNewsArticleByIdAsync(id: Int): LiveData<Article> {
         return withContext(Dispatchers.IO) {
-            savedNewsArticlesDao.getSavedNewsArticleByID(id)
+            newsDao.getTempNewsArticleByID(id)
         }
     }
 
-    override suspend fun saveNewsArticleToDbAsync(newsArticleEntry: ArticleEntry) {
+    override suspend fun addArticleToBookmarks(newsArticle: Article) {
         withContext(Dispatchers.IO){
-            savedNewsArticlesDao.upsert(newsArticleEntry) }
+            newsDao.insertTempArticle(newsArticle) }
     }
 
-    override suspend fun saveNewsSourceIntoHidden(hiddenSourcesEntry: HiddenSourcesEntry) {
+    override suspend fun addNewsSourceIntoHiddenList(hiddenSourcesEntry: HiddenSourcesEntry) {
         withContext(Dispatchers.IO) {
-            hiddenSourcesDao.insert(hiddenSourcesEntry)
+            newsDao.insertHiddenSource(hiddenSourcesEntry)
         }
     }
 
     override suspend fun getAllHiddenNewsSources(): LiveData<List<HiddenSourcesEntry>> {
         return withContext(Dispatchers.IO){
             val data = MutableLiveData<List<HiddenSourcesEntry>>()
-            val hiddenSourcesList = hiddenSourcesDao.getAllHiddenSources()
+            val hiddenSourcesList = newsDao.getAllHiddenSources()
             data.postValue(hiddenSourcesList)
             data
         }
@@ -88,7 +113,7 @@ class NewsRepositoryImpl(
 
     override suspend fun removeHiddenNewsSourceFromDB(sourceID: String) {
         withContext(Dispatchers.IO){
-            hiddenSourcesDao.removeHiddenSourceFromDB(sourceID)
+            newsDao.removeHiddenSourceFromDB(sourceID)
         }
     }
 }

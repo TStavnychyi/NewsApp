@@ -15,11 +15,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.LocalDateConverter
-import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.db.converters.LocalDateConverter
+import com.tstv.newsapp.data.vo.Article
 
 class SourceNewsAdapter(
-    private val articlesList: List<ArticleEntry>
+    private val articlesList: List<Article>
 ) : RecyclerView.Adapter<SourceNewsAdapter.NewsViewHolder>()  {
 
     private lateinit var context: Context
@@ -50,9 +50,9 @@ class SourceNewsAdapter(
         private val cardView = view.findViewById<CardView>(R.id.cardView)
         private val dividerView = view.findViewById<View>(R.id.divider_line)
 
-        private lateinit var articleItem: ArticleEntry
+        private lateinit var articleItem: Article
 
-        fun bind(item: ArticleEntry, adapterItemPosition: Int) {
+        fun bind(item: Article, adapterItemPosition: Int) {
             resetViewsParams()
 
             articleItem = item

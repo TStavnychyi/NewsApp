@@ -1,4 +1,4 @@
-package com.tstv.newsapp.data.db
+package com.tstv.newsapp.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

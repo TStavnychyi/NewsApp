@@ -2,9 +2,11 @@ package com.tstv.newsapp.ui.news.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,8 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.entity.ArticleEntry
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
+import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.data.vo.Status
 import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
 import com.tstv.newsapp.ui.news.adapters.NewsAdapter
@@ -30,13 +33,15 @@ import org.kodein.di.generic.instance
 
 class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetListener {
 
+    private val TAG = NewsFragment::class.java.name
+
     override val kodein by closestKodein()
 
     private val vieWModelFactoryInstanceFactory: NewsViewModelFactory by instance()
 
     private lateinit var viewModel: NewsViewModel
 
-    private lateinit var articlesList: MutableList<ArticleEntry>
+    private lateinit var articlesList: MutableList<Article>
 
     private lateinit var newsCategory: String
 
@@ -60,7 +65,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         super.onCreate(savedInstanceState)
 
         arguments?.getSerializable(NEWS_CATEGORY)?.let {
-            newsCategory = it as String
+            newsCategory = (it as String).toLowerCase()
         }
     }
 
@@ -83,16 +88,28 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     }
 
     private fun bindUI() = launch(Dispatchers.Main) {
-        val newsArticlesLiveData = viewModel.getNewsArticlesAsync(newsCategory)
-        newsArticlesLiveData.observe(this@NewsFragment, Observer {
-            articlesList = newsArticlesLiveData.value!!.toMutableList()
-            initRecyclerView(articlesList)
-            news_group_loading_bar.visibility = View.GONE
+        viewModel.setCategory(newsCategory)
+        viewModel.newsArticles.observe(this@NewsFragment, Observer {
+            when(it.status){
+                Status.SUCCESS -> {
+                    if(it.data != null && it.data.isNotEmpty()){
+                        articlesList = it.data.toMutableList()
+                        initRecyclerView(articlesList)
+                        news_group_loading_bar.visibility = View.GONE
+                    }
+                }
+                Status.ERROR -> {
+                    Log.e(TAG, "News fetching error : ${it.message}")
+                    Toast.makeText(context!!, "Error occur while fetching news articles", Toast.LENGTH_LONG).show()
+                    news_group_loading_bar.visibility = View.GONE
+                }
+                Status.LOADING -> { }
+            }
         })
 
     }
 
-    private fun initRecyclerView(newsArticles: MutableList<ArticleEntry>){
+    private fun initRecyclerView(newsArticles: MutableList<Article>){
         newsAdapter = NewsAdapter(this@NewsFragment, newsArticles)
 
         news_recycler_view.apply {
@@ -112,17 +129,20 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
             }
             BottomSheetSelectedItemAction.SHOW_NEWS_FROM_THIS_SOURCE -> {
                 with(articleEntry.source!!){
-                    val action = NewsPageFragmentDirections.actionToSourceNewsFragment(sourceID, name)
+                    val action = NewsPageFragmentDirections.actionToSourceNewsFragment(sourceID!!, name)
                     findNavController().navigate(action)
                 }
             }
             BottomSheetSelectedItemAction.HIDE_ARTICLE_FROM_THAT_SOURCE -> {
-                val hiddenSourceEntry = HiddenSourcesEntry(source = articleEntry.source!!)
+                var hiddenSourceEntry: HiddenSourcesEntry
+                with(articleEntry.source!!) {
+                    hiddenSourceEntry = HiddenSourcesEntry(sourceId = sourceID, sourceName = name)
+                }
                 viewModel.saveNewsSourceIntoHidden(hiddenSourceEntry)
                 launch(Dispatchers.Main) {
                     with(hiddenSourceEntry) {
-                        removeItemFromAdapter(source.sourceID)
-                        showMessageOfSuccessRemoveSourceWithCancelAction(source.name, source.sourceID)
+                        removeItemFromAdapter(sourceId!!)
+                        showMessageOfSuccessRemoveSourceWithCancelAction(sourceName, sourceId)
                     }
                 }
             }
@@ -134,7 +154,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         showSnackbarWithAction(message) {
             launch(Dispatchers.Main) {
                 viewModel.removeHiddenNewsSourceFromDB(sourceID)
-                val newsArticlesLiveData = viewModel.getNewsArticlesAsync(newsCategory)
+                val newsArticlesLiveData = viewModel.getNewsArticlesFromDb(newsCategory)
                 newsArticlesLiveData.observeOnce(this@NewsFragment, Observer {
                     newsAdapter.setAdapterDataList(it.toMutableList())
                 })
@@ -151,11 +171,11 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         newsAdapter.notifyDataSetChanged()
     }
 
-    private fun shareContent(articleEntry: ArticleEntry){
+    private fun shareContent(article: Article){
         val myIntent = Intent(Intent.ACTION_SEND)
         myIntent.type = "type/palin"
         val shareText = StringBuilder()
-        with(articleEntry) {
+        with(article) {
             if(!author.isNullOrEmpty())
                 shareText.append("$author: ")
 

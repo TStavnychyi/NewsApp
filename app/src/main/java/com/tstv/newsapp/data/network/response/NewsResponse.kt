@@ -1,11 +1,11 @@
 package com.tstv.newsapp.data.network.response
 
 import com.google.gson.annotations.SerializedName
-import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.vo.Article
 
 data class NewsResponse(
     @SerializedName("articles")
-    val articles: List<ArticleEntry>,
+    val articles: List<Article>,
     val status: String,
     val totalResults: Int,
     val articleCategory: ArticleCategory

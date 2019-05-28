@@ -1,7 +1,6 @@
 package com.tstv.newsapp.ui.news.adapters
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.LocalDateConverter
-import com.tstv.newsapp.data.db.entity.ArticleEntry
-import javax.sql.DataSource
+import com.tstv.newsapp.data.db.converters.LocalDateConverter
+import com.tstv.newsapp.data.vo.Article
 
 class NewsCardViewAdapter(
-    private val articleList: List<ArticleEntry>
+    private val articleList: List<Article>
 ): RecyclerView.Adapter<NewsCardViewAdapter.CardView_ViewHolder>() {
 
 
@@ -48,11 +44,11 @@ class NewsCardViewAdapter(
         private val tvArticlePublisher = view.findViewById<TextView>(R.id.tv_article_publisher_name)
         private val tvArticlePublishDate = view.findViewById<TextView>(R.id.tv_article_publish_date)
 
-        fun bind(article: ArticleEntry){
+        fun bind(article: Article){
             with(article){
                 tvArticlePublisher.text = author
                 tvArticleTitle.text = title
-                parseAndSetDateToView(article.publishedAt)
+                parseAndSetDateToView(publishedAt)
                 if(urlToImage != null && urlToImage.isEmpty())
                     ivArticleImage.visibility = View.GONE
                 else

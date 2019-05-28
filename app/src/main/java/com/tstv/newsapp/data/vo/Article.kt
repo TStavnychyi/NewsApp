@@ -1,12 +1,11 @@
-package com.tstv.newsapp.data.db.entity
+package com.tstv.newsapp.data.vo
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tstv.newsapp.data.pojo.Source
 
-@Entity(tableName = "saved_news_articles")
-data class ArticleEntry(
+@Entity(tableName = "news_articles")
+data class Article(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val author: String?,
@@ -17,5 +16,7 @@ data class ArticleEntry(
     val source: Source?,
     val title: String,
     val url: String?,
-    val urlToImage: String?
+    val urlToImage: String?,
+    val bookmark: Boolean = false,
+    var category: String? = ""
 )

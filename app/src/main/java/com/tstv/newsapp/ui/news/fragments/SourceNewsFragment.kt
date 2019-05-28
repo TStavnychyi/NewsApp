@@ -5,16 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.ui.base.ScopedFragment
 import com.tstv.newsapp.ui.news.adapters.SourceNewsAdapter
 import com.tstv.newsapp.ui.news.view_models.SourceViewModel
@@ -71,7 +68,7 @@ class SourceNewsFragment : ScopedFragment(), KodeinAware {
 
     }
 
-    private fun initRecyclerView(articlesList: List<ArticleEntry>){
+    private fun initRecyclerView(articlesList: List<Article>){
         val sourcesNewsAdapter = SourceNewsAdapter(articlesList)
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@SourceNewsFragment.context)

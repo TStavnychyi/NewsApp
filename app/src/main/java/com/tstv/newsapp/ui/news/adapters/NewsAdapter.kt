@@ -15,14 +15,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.LocalDateConverter
-import com.tstv.newsapp.data.db.entity.ArticleEntry
+import com.tstv.newsapp.data.db.converters.LocalDateConverter
+import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog
 import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class NewsAdapter(
     private val newsFragment: NewsFragment,
-    private var dataList: MutableList<ArticleEntry>
+    private var dataList: MutableList<Article>
 ): RecyclerView.Adapter<NewsAdapter.BaseViewHolder<*>>() {
 
     private var currentViewID: Int = 0
@@ -59,8 +59,8 @@ class NewsAdapter(
         val dataElement = dataList[position]
         (holder as ArticleViewHolder).bind(dataElement, position)
 //        when(holder){
-//            is ArticleCardViewsViewHolder -> holder.bind(dataElement as List<ArticleEntry>)
-//            is ArticleViewHolder -> holder.bind(dataElement as ArticleEntry)
+//            is ArticleCardViewsViewHolder -> holder.bind(dataElement as List<Article>)
+//            is ArticleViewHolder -> holder.bind(dataElement as Article)
 //            else -> throw IllegalArgumentException()
 //        }
     }
@@ -71,7 +71,7 @@ class NewsAdapter(
 //                currentViewID = TYPE_INNER_RECYCLER_VIEW
 //                TYPE_INNER_RECYCLER_VIEW
 //            }
-            is ArticleEntry -> {
+            is Article -> {
                 currentViewID = TYPE_ARTICLE_VIEW
                 TYPE_ARTICLE_VIEW
             }
@@ -88,7 +88,7 @@ class NewsAdapter(
         dataList = sortedList
     }
 
-    fun setAdapterDataList(list: MutableList<ArticleEntry>) {
+    fun setAdapterDataList(list: MutableList<Article>) {
         dataList = list
         notifyDataSetChanged()
     }
@@ -110,15 +110,15 @@ class NewsAdapter(
 
     inner class ArticleCardViewsViewHolder(
         private val view: View
-    ): BaseViewHolder<List<ArticleEntry>>(view){
+    ): BaseViewHolder<List<Article>>(view){
 
         private val cardViewsRecyclerView = view.findViewById<RecyclerView>(R.id.home_news_adapter_inner_recycler_view_item)
 
-        override fun bind(item: List<ArticleEntry>, adapterItemPosition: Int) {
+        override fun bind(item: List<Article>, adapterItemPosition: Int) {
             bindRecyclerView(item)
         }
 
-        private fun bindRecyclerView(articlesList: List<ArticleEntry>){
+        private fun bindRecyclerView(articlesList: List<Article>){
             cardViewsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
                 val cardViewAdapter = NewsCardViewAdapter(articlesList)
@@ -129,7 +129,7 @@ class NewsAdapter(
 
     inner class ArticleViewHolder(
         val view: View
-    ): BaseViewHolder<ArticleEntry>(view){
+    ): BaseViewHolder<Article>(view){
 
         private val tvArticleTitle = view.findViewById<TextView>(R.id.tv_article_title)
         private val ivArticleImage = view.findViewById<ImageView>(R.id.iv_article_image)
@@ -140,9 +140,9 @@ class NewsAdapter(
         private val cardView = view.findViewById<CardView>(R.id.cardView)
         private val dividerView = view.findViewById<View>(R.id.divider_line)
 
-        private lateinit var articleItem: ArticleEntry
+        private lateinit var articleItem: Article
 
-        override fun bind(item: ArticleEntry, adapterItemPosition: Int) {
+        override fun bind(item: Article, adapterItemPosition: Int) {
             resetViewsParams()
 
             articleItem = item

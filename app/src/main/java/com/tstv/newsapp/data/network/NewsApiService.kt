@@ -1,7 +1,9 @@
 package com.tstv.newsapp.data.network
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import androidx.lifecycle.LiveData
+import com.tstv.newsapp.data.network.response.ApiResponse
 import com.tstv.newsapp.data.network.response.NewsResponse
+import com.tstv.newsapp.internal.LiveDataCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -12,15 +14,23 @@ import retrofit2.http.Query
 
 const val API_KEY = "6df7efea9dab4b45a825a2e27e0fc40d"
 
-// https://newsapi.org/v2/top-headlines?country=ua&category=business&apiKey=1adcd40902fc456492c6416c3d5c4eb6
+// https://newsapi.org/v2/top-headlines?country=ua&category=business&apiKey=6df7efea9dab4b45a825a2e27e0fc40d
 
 interface NewsApiService {
 
     @GET("top-headlines")
     fun getNewsByCountryAndCategoryAsync (
+        @Query("category") category: String,
         @Query("country") country: String = "us",
-        @Query("category") category: String
+        @Query("pageSize") pageSize: Int = 20,
+        @Query("page") page: Int = 1
     ): Deferred<NewsResponse>
+
+    @GET("top-headlines")
+    fun getNewsByCountryAndCategoryAsync (
+        @Query("category") category: String,
+        @Query("country") country: String = "us"
+    ): LiveData<ApiResponse<NewsResponse>>
 
     @GET("top-headlines")
     fun getNewsBySourceAsync (
@@ -54,7 +64,8 @@ interface NewsApiService {
                 .client(okHttpClient)
                 .baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+          //      .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
                 .build()
                 .create(NewsApiService::class.java)
         }
