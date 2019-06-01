@@ -18,5 +18,6 @@ data class Article(
     val url: String?,
     val urlToImage: String?,
     val bookmark: Boolean = false,
-    var category: String? = ""
+    var category: String? = "",
+    var fetchedTime: String?
 )

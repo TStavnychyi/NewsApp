@@ -13,8 +13,11 @@ import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.ContextProviders
+import com.tstv.newsapp.internal.convertLocalTimeToString
+import com.tstv.newsapp.internal.convertStringToLocalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDateTime
 
 class NewsRepositoryImpl(
     private val selectedNewsCategoriesDao: SelectedNewsCategoriesDao,
@@ -31,6 +34,7 @@ class NewsRepositoryImpl(
 
                 for(article in filteredNewsArticles){
                     article.category = category
+                    article.fetchedTime = convertLocalTimeToString(LocalDateTime.now())
                 }
                 newsDao.insertTempArticles(filteredNewsArticles)
             }
@@ -54,11 +58,20 @@ class NewsRepositoryImpl(
 
                 for(article in filteredNewsArticles){
                     article.category = category
+                    article.fetchedTime = convertLocalTimeToString(LocalDateTime.now())
                 }
                 newsDao.insertTempArticles(filteredNewsArticles)
             }
 
-            override fun shouldFetch(data: List<Article>?): Boolean = true
+            override fun shouldFetch(data: List<Article>?): Boolean {
+                return if(data.isNullOrEmpty()) {
+                   true
+                } else
+                {
+                    val lastFetchedItemTime = convertStringToLocalTime(data.last().fetchedTime!!)
+                    lastFetchedItemTime.isBefore(LocalDateTime.now().minusMinutes(30))
+                }
+            }
 
             override fun loadFromDb(): LiveData<List<Article>> = newsDao.getAllTempArticlesByCategory(category)
 
