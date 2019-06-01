@@ -157,6 +157,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
                                         showToast("Error occur while fetching news articles")
                                         viewModel.newsArticles.removeObservers(this@NewsFragment)
                                         isLoading = false
+                                        newsAdapter.removeLoadingView()
                                     }
                                     Status.LOADING -> { }
                                 }
