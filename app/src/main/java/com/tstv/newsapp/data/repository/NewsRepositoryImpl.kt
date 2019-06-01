@@ -24,6 +24,26 @@ class NewsRepositoryImpl(
 
     val contextProviders = ContextProviders.getInstance()
 
+    override fun loadMoreNewsArticlesAsync(category: String, page: Int): LiveData<Resource<List<Article>>> {
+        return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
+            override fun saveCallResult(item: NewsResponse) {
+                val filteredNewsArticles = filterFetchedNewsFromHiddenSources(item.articles)
+
+                for(article in filteredNewsArticles){
+                    article.category = category
+                }
+                newsDao.insertTempArticles(filteredNewsArticles)
+            }
+
+            override fun createCall() = newsApiService.getNewsByCountryAndCategoryAsync(category, page = page)
+
+            override fun shouldFetch(data: List<Article>?) = true
+
+            override fun loadFromDb() = newsDao.getAllTempArticlesByCategory(category)
+
+        }.asLiveData()
+    }
+
     override fun getNewsArticlesAsync(category: String): LiveData<Resource<List<Article>>> {
         return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
 
@@ -46,6 +66,8 @@ class NewsRepositoryImpl(
 
         }.asLiveData()
     }
+
+
 
     override suspend fun getNewsArticlesFromDb(category: String) = newsDao.getAllTempArticlesByCategory(category)
 

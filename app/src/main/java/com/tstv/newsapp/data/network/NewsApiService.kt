@@ -24,7 +24,7 @@ interface NewsApiService {
         @Query("country") country: String = "us",
         @Query("pageSize") pageSize: Int = 20,
         @Query("page") page: Int = 1
-    ): Deferred<NewsResponse>
+    ): LiveData<ApiResponse<NewsResponse>>
 
     @GET("top-headlines")
     fun getNewsByCountryAndCategoryAsync (

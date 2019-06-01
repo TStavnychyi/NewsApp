@@ -40,6 +40,8 @@ class NewsViewModel(
         }
     }
 
+    fun loadMoreNewsArticles(category: String, page: Int) = newsRepository.loadMoreNewsArticlesAsync(category, page)
+
     suspend fun getNewsArticlesFromDb(category: String) = newsRepository.getNewsArticlesFromDb(category)
 
     suspend fun getNewsArticleByIdAsync(id: Int) = newsRepository.getNewsArticleByIdAsync(id)

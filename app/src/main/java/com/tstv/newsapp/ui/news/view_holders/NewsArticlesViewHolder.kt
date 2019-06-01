@@ -15,20 +15,21 @@ import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.converters.LocalDateConverter
 import com.tstv.newsapp.data.vo.Article
+import com.tstv.newsapp.ui.base.BaseViewHolder
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog
 import com.tstv.newsapp.ui.news.fragments.NewsFragment
 
 class NewsArticlesViewHolder(
     val view: View,
-    private val dataList: List<Article>,
+    private val adapterDataListSize: Int,
     private val newsFragment: NewsFragment)
-    : RecyclerView.ViewHolder(view) {
+    : BaseViewHolder<Article>(view) {
 
     companion object{
-        fun create(parent: ViewGroup, dataList: List<Article>, newsFragment: NewsFragment) : NewsArticlesViewHolder{
+        fun create(parent: ViewGroup, adapterDataListSize: Int, newsFragment: NewsFragment) : NewsArticlesViewHolder{
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.adapter_item_news_article, parent, false)
-            return NewsArticlesViewHolder(view, dataList, newsFragment)
+            return NewsArticlesViewHolder(view, adapterDataListSize, newsFragment)
         }
     }
 
@@ -43,7 +44,7 @@ class NewsArticlesViewHolder(
 
     private lateinit var articleItem: Article
 
-    fun bind(item: Article, adapterItemPosition: Int) {
+     override fun bind(item: Article, adapterItemPosition: Int) {
         resetViewsParams()
 
         articleItem = item
@@ -61,7 +62,7 @@ class NewsArticlesViewHolder(
             }
         }
 
-        if ((dataList.size - 1) == adapterItemPosition)
+        if ((adapterDataListSize - 1) == adapterItemPosition)
             dividerView.visibility = View.INVISIBLE
         else
             dividerView.visibility = View.VISIBLE

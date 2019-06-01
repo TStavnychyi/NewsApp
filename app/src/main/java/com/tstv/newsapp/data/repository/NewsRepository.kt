@@ -27,5 +27,7 @@ interface NewsRepository {
 
     fun getNewsArticlesAsync(category: String): LiveData<Resource<List<Article>>>
 
+    fun loadMoreNewsArticlesAsync(category: String, page: Int): LiveData<Resource<List<Article>>>
+
     suspend fun getNewsArticlesFromDb(category: String): LiveData<List<Article>>
 }

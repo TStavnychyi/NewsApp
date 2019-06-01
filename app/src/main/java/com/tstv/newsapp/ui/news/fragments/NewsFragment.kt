@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
@@ -25,7 +26,9 @@ import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsB
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsBottomSheetListener.BottomSheetSelectedItemAction
 import com.tstv.newsapp.ui.news.view_models.NewsViewModel
 import com.tstv.newsapp.ui.news.view_models.NewsViewModelFactory
+import kotlinx.android.synthetic.main.fragment_source_news.*
 import kotlinx.android.synthetic.main.news_fragment.*
+import kotlinx.android.synthetic.main.news_fragment.news_group_loading_bar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -95,14 +98,16 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
                 Status.SUCCESS -> {
                     if(it.data != null && it.data.isNotEmpty()){
                         articlesList = it.data.toMutableList()
-                        initRecyclerView(articlesList)
+                        initRecyclerView()
                         news_group_loading_bar.visibility = View.GONE
+                        viewModel.newsArticles.removeObservers(this@NewsFragment)
                     }
                 }
                 Status.ERROR -> {
                     Log.e(TAG, "News fetching error : ${it.message}")
                     showToast("Error occur while fetching news articles")
                     news_group_loading_bar.visibility = View.GONE
+                    viewModel.newsArticles.removeObservers(this@NewsFragment)
                 }
                 Status.LOADING -> { }
             }
@@ -110,12 +115,56 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
 
     }
 
-    private fun initRecyclerView(newsArticles: MutableList<Article>){
-        newsAdapter = NewsAdapter(this@NewsFragment, newsArticles)
-
+    private fun initRecyclerView(){
+        newsAdapter = NewsAdapter(this@NewsFragment, articlesList)
         news_recycler_view.apply {
+            var isLoading = false
+            var page = 1
+            var fetchedMaxResults = false
             layoutManager = LinearLayoutManager(this@NewsFragment.context)
             adapter = newsAdapter
+
+            fun loadMore(data: List<Article>){
+                val dataListSizeBeforeUpdate = articlesList.size
+                if(dataListSizeBeforeUpdate != data.size) {
+                    articlesList = data.toMutableList()
+                    newsAdapter.loadMoreData(data)
+                }else{
+                    newsAdapter.removeLoadingView()
+                    fetchedMaxResults = true
+                }
+            }
+
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val linearLayoutManager: LinearLayoutManager = layoutManager as LinearLayoutManager
+                    if(!isLoading){
+                        if(articlesList.size > 0 && linearLayoutManager.findLastCompletelyVisibleItemPosition() == articlesList.size - 1 && !fetchedMaxResults){
+                            isLoading = true
+                            viewModel.loadMoreNewsArticles(newsCategory, ++page).observe(this@NewsFragment, Observer {
+                                when(it.status){
+                                    Status.SUCCESS -> {
+                                        if(it.data != null && it.data.isNotEmpty()){
+                                            loadMore(it.data)
+                                            viewModel.newsArticles.removeObservers(this@NewsFragment)
+                                            isLoading = false
+                                        }
+                                    }
+                                    Status.ERROR -> {
+                                        Log.e(TAG, "News fetching error : ${it.message}")
+                                        showToast("Error occur while fetching news articles")
+                                        viewModel.newsArticles.removeObservers(this@NewsFragment)
+                                        isLoading = false
+                                    }
+                                    Status.LOADING -> { }
+                                }
+                            })
+                        }
+                    }
+                }
+            })
         }
     }
 
