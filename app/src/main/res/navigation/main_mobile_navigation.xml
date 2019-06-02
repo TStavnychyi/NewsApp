@@ -16,6 +16,10 @@
         <action
                 android:id="@+id/action_from_news_to_article_options_dialog"
                 app:destination="@id/destination_article_options_bottom_dialog"/>
+        <action
+                android:id="@+id/action_from_news_to_news_detail"
+                app:destination="@id/newsArticleDetailFragment"
+                app:popUpToInclusive="false"/>
     </fragment>
     <fragment
             android:id="@+id/destination_source_news_fragment"
@@ -39,6 +43,15 @@
                 app:nullable="true"/>
         <argument
                 android:name="selected_item_position_arg"
+                app:argType="integer"/>
+    </fragment>
+    <fragment
+            android:id="@+id/newsArticleDetailFragment"
+            android:name="com.tstv.newsapp.ui.news_article_details.ArticleDetailFragment"
+            android:label="fragment_news_article_detail"
+            tools:layout="@layout/fragment_news_article_detail">
+        <argument
+                android:name="article_id"
                 app:argType="integer"/>
     </fragment>
 

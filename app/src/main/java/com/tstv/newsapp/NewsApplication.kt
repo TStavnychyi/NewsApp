@@ -9,6 +9,7 @@ import com.tstv.newsapp.data.repository.NewsRepositoryImpl
 import com.tstv.newsapp.ui.news.view_models.NewsViewModelFactory
 import com.tstv.newsapp.ui.interests.NewsCategoriesViewModelFactory
 import com.tstv.newsapp.ui.news.view_models.SourceViewModelFactory
+import com.tstv.newsapp.ui.news_article_details.ArticleDetailsViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -31,6 +32,7 @@ class NewsApplication: Application(), KodeinAware {
         bind() from provider {NewsCategoriesViewModelFactory(instance(), instance())}
         bind() from provider {SourceViewModelFactory(instance())}
         bind() from provider{ NewsViewModelFactory(instance()) }
+        bind() from provider{ArticleDetailsViewModelFactory(instance())}
 
         //NETWORK
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }

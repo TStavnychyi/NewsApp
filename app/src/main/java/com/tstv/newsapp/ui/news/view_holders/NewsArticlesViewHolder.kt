@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -18,6 +18,7 @@ import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.ui.base.BaseViewHolder
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog
 import com.tstv.newsapp.ui.news.fragments.NewsFragment
+import com.tstv.newsapp.ui.news.fragments.NewsPageFragmentDirections
 
 class NewsArticlesViewHolder(
     val view: View,
@@ -80,7 +81,9 @@ class NewsArticlesViewHolder(
             ivArticleOptions.setOnClickListener {
                 openOptionsBottomSheetDialog() }
 
-            view.setOnClickListener { //TODO open detail view
+            view.setOnClickListener {
+                val actionWithArgument = NewsPageFragmentDirections.actionFromNewsToNewsDetail(articleItem.id!!)
+                findNavController(newsFragment).navigate(actionWithArgument)
             }
         }
 

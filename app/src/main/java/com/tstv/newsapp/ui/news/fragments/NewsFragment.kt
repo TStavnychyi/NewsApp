@@ -26,9 +26,7 @@ import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsB
 import com.tstv.newsapp.ui.news.dialogs.OptionsBottomSheetDialog.ArticleOptionsBottomSheetListener.BottomSheetSelectedItemAction
 import com.tstv.newsapp.ui.news.view_models.NewsViewModel
 import com.tstv.newsapp.ui.news.view_models.NewsViewModelFactory
-import kotlinx.android.synthetic.main.fragment_source_news.*
 import kotlinx.android.synthetic.main.news_fragment.*
-import kotlinx.android.synthetic.main.news_fragment.news_group_loading_bar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -87,8 +85,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        bindUI()
+            bindUI()
     }
 
     private fun bindUI() = launch(Dispatchers.Main) {
