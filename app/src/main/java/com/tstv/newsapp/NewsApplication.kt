@@ -6,6 +6,7 @@ import com.tstv.newsapp.data.db.NewsDatabase
 import com.tstv.newsapp.data.network.*
 import com.tstv.newsapp.data.repository.NewsRepository
 import com.tstv.newsapp.data.repository.NewsRepositoryImpl
+import com.tstv.newsapp.ui.bookmarks.BookmarkViewModelFactory
 import com.tstv.newsapp.ui.news.view_models.NewsViewModelFactory
 import com.tstv.newsapp.ui.interests.NewsCategoriesViewModelFactory
 import com.tstv.newsapp.ui.news.view_models.SourceViewModelFactory
@@ -33,6 +34,7 @@ class NewsApplication: Application(), KodeinAware {
         bind() from provider {SourceViewModelFactory(instance())}
         bind() from provider{ NewsViewModelFactory(instance()) }
         bind() from provider{ArticleDetailsViewModelFactory(instance())}
+        bind() from provider{ BookmarkViewModelFactory(instance())}
 
         //NETWORK
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }

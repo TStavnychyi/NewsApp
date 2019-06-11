@@ -39,7 +39,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
 
     override val kodein by closestKodein()
 
-    private val vieWModelFactoryInstanceFactory: NewsViewModelFactory by instance()
+    private val viewModelFactoryInstanceFactory: NewsViewModelFactory by instance()
 
     private lateinit var viewModel: NewsViewModel
 
@@ -74,7 +74,7 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, vieWModelFactoryInstanceFactory).get(NewsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactoryInstanceFactory).get(NewsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

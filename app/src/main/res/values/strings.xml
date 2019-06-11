@@ -12,6 +12,10 @@
     <string name="news_options_menu_hide_item_title">Hide all news from source</string>
     <string name="news_options_menu_redirect_item_title">See all news from</string>
     <string name="share_content_dialog_title">Share</string>
+    <string name="sources_bookmarks_title">Sources</string>
+    <string name="btn_view_all_bookmarks_and_set_up">View everything and set up</string>
+    <string name="bookmarks_local_news_block_title">Local news</string>
+    <string name="bookmark_saved_news_title">Saved news</string>
 
     <string-array name="interests_categories">
         <item>Politics</item>
