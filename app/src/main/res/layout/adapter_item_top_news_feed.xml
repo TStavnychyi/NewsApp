@@ -25,7 +25,7 @@
             app:layout_constraintGuide_percent="0.8"/>
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_hor1_perc"
+            android:id="@+id/guideline_ver_perc"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:orientation="horizontal"
@@ -39,7 +39,7 @@
             android:layout_margin="@dimen/articles_views_margin_start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline_hor1_perc">
+            app:layout_constraintTop_toTopOf="@+id/guideline_ver_perc">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
