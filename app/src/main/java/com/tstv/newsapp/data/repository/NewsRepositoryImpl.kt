@@ -10,14 +10,11 @@ import com.tstv.newsapp.data.network.NewsApiService
 import com.tstv.newsapp.data.network.response.ApiResponse
 import com.tstv.newsapp.data.network.response.NewsResponse
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.ContextProviders
-import com.tstv.newsapp.internal.convertLocalTimeToString
-import com.tstv.newsapp.internal.convertStringToLocalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.OffsetDateTime
 
 class NewsRepositoryImpl(
     private val selectedNewsCategoriesDao: SelectedNewsCategoriesDao,
@@ -34,7 +31,7 @@ class NewsRepositoryImpl(
 
                 for(article in filteredNewsArticles){
                     article.category = category
-                    article.fetchedTime = convertLocalTimeToString(LocalDateTime.now())
+                    article.fetchedTime = OffsetDateTime.now()
                 }
                 newsDao.insertTempArticles(filteredNewsArticles)
             }
@@ -43,7 +40,7 @@ class NewsRepositoryImpl(
 
             override fun shouldFetch(data: List<Article>?) = true
 
-            override fun loadFromDb() = newsDao.getAllTempArticlesByCategory(category)
+            override fun loadFromDb() = newsDao.getAllTempArticlesByCategory(category, OffsetDateTime.now().minusMinutes(30))
 
         }.asLiveData()
     }
@@ -52,37 +49,27 @@ class NewsRepositoryImpl(
         return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
 
             override fun saveCallResult(item: NewsResponse) {
-                newsDao.removeTempNewsByCategory(category)
+                newsDao.removeTempNewsByCategory(category, OffsetDateTime.now().minusMinutes(30))
 
                 val filteredNewsArticles = filterFetchedNewsFromHiddenSources(item.articles)
 
                 for(article in filteredNewsArticles){
                     article.category = category
-                    article.fetchedTime = convertLocalTimeToString(LocalDateTime.now())
+                    article.fetchedTime = OffsetDateTime.now()
                 }
                 newsDao.insertTempArticles(filteredNewsArticles)
             }
 
-            override fun shouldFetch(data: List<Article>?): Boolean {
-                return if(data.isNullOrEmpty()) {
-                   true
-                } else
-                {
-                    val lastFetchedItemTime = convertStringToLocalTime(data.last().fetchedTime!!)
-                    lastFetchedItemTime.isBefore(LocalDateTime.now().minusMinutes(30))
-                }
-            }
+            override fun shouldFetch(data: List<Article>?) = data.isNullOrEmpty()
 
-            override fun loadFromDb(): LiveData<List<Article>> = newsDao.getAllTempArticlesByCategory(category)
+            override fun loadFromDb() = newsDao.getAllTempArticlesByCategory(category, OffsetDateTime.now().minusMinutes(30))
 
             override fun createCall(): LiveData<ApiResponse<NewsResponse>> = newsApiService.getNewsByCountryAndCategoryAsync(category)
 
         }.asLiveData()
     }
 
-
-
-    override suspend fun getNewsArticlesFromDb(category: String) = newsDao.getAllTempArticlesByCategory(category)
+    override suspend fun getNewsArticlesFromDb(category: String) = newsDao.getAllTempArticlesByCategory(category, OffsetDateTime.now().minusMinutes(30))
 
     override suspend fun getNewsArticlesBySourceNameAsync(sourceName: String): LiveData<List<Article>> {
         return withContext(Dispatchers.IO) {
@@ -119,14 +106,12 @@ class NewsRepositoryImpl(
     }
 
     override suspend fun getNewsArticleByIdAsync(id: Int): LiveData<Article> {
-        return withContext(Dispatchers.IO) {
-            newsDao.getTempNewsArticleByID(id)
-        }
+        return  newsDao.getNewsArticleByID(id)
     }
 
-    override suspend fun saveArticleBookmark(article: BookmarksArticle) {
+    override suspend fun saveArticleBookmark(article: Article) {
         withContext(Dispatchers.IO){
-            newsDao.insertBookmarkArticle(article) }
+            newsDao.insertTempArticle(article) }
     }
 
     override suspend fun addNewsSourceIntoHiddenList(hiddenSourcesEntry: HiddenSourcesEntry) {
@@ -149,4 +134,7 @@ class NewsRepositoryImpl(
             newsDao.removeHiddenSourceFromDB(sourceID)
         }
     }
+
+    override suspend fun getSavedNewsArticlesBookmarks(): LiveData<List<Article>> = newsDao.getAllBookmarks()
+
 }

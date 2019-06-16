@@ -7,12 +7,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
+import org.threeten.bp.OffsetDateTime
 
 @Dao
 interface NewsDao {
 
-    //TEMP NEWS ARTICLES
+    @Query("select * from news_articles")
+    fun getAll(): List<Article>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTempArticle(article: Article)
@@ -20,31 +21,23 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTempArticles(articles: List<Article>)
 
-    @Query("select * from news_articles")
-    fun getAllTempNewsArticles(): LiveData<List<Article>>
+    @Query("select * from news_articles where datetime(fetchedTime) >= datetime(:thirtyMinBehindTime)")
+    fun getAllTempNewsArticles(thirtyMinBehindTime: OffsetDateTime): LiveData<List<Article>>
 
-    @Query("select * from news_articles where category = :category")
-    fun getAllTempArticlesByCategory(category: String): LiveData<List<Article>>
+    @Query("select * from news_articles where category = :category and datetime(fetchedTime) >= datetime(:thirtyMinBehindTime)")
+    fun getAllTempArticlesByCategory(category: String, thirtyMinBehindTime: OffsetDateTime): LiveData<List<Article>>
 
     @Query("select * from news_articles where id = :articleID")
-    fun getTempNewsArticleByID(articleID: Int): LiveData<Article>
+    fun getNewsArticleByID(articleID: Int): LiveData<Article>
 
     @Query("delete from news_articles where id = :articleID")
-    fun removeTempNewsArticleByID(articleID: Int)
+    fun removeNewsArticleByID(articleID: Int)
 
-    @Query("delete from news_articles where category = :category")
-    fun removeTempNewsByCategory(category: String)
+    @Query("delete from news_articles where category = :category and datetime(fetchedTime) < datetime(:tempArticleLivingTime) and bookmark = 0")
+    fun removeTempNewsByCategory(category: String, tempArticleLivingTime: OffsetDateTime)
 
-    // BOOKMARKS ARTICLES
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBookmarkArticle(bookmarksArticle: BookmarksArticle)
-
-    @Query("select * from bookmarks_articles")
-    fun getAllBookmarksArticles(): LiveData<List<Article>>
-
-    @Query("delete from bookmarks_articles where id = :articleID")
-    fun removeBookmarkArticle(articleID: Int)
+    @Query("select * from news_articles where bookmark = 1")
+    fun getAllBookmarks(): LiveData<List<Article>>
 
     // HIDDEN NEWS SOURCES
 

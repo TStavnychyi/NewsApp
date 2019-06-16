@@ -2,6 +2,6 @@ package com.tstv.newsapp.internal.listeners
 
 import android.view.View
 
-interface RecyclerViewItemClickListener {
+interface OnRecyclerViewItemClickListener {
     fun onClick(view: View, position: Int)
 }

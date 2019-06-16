@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Status
 import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
@@ -170,8 +169,8 @@ class NewsFragment : ScopedFragment(), KodeinAware, ArticleOptionsBottomSheetLis
         val articleEntry = articlesList[selectedPosition]
         when(bottomSheetSelectedItemAction){
             BottomSheetSelectedItemAction.SAVE_ARTICLE -> {
-                val articleBookmark = BookmarksArticle(articleEntry)
-                viewModel.saveArticleBookmark(articleBookmark)
+                articleEntry.bookmark = true
+                viewModel.saveArticleBookmark(articleEntry)
                 showToast("Article was successfully saved")
             }
             BottomSheetSelectedItemAction.SHARE_ARTICLE -> {

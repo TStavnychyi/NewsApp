@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 
 interface NewsRepository {
@@ -13,7 +12,9 @@ interface NewsRepository {
 
     suspend fun saveNewsInterestsToDB(selectedNewsInterests: List<SelectedNewsCategoriesEntry>)
 
-    suspend fun saveArticleBookmark(article: BookmarksArticle)
+    suspend fun saveArticleBookmark(article: Article)
+
+    suspend fun getSavedNewsArticlesBookmarks(): LiveData<List<Article>>
 
     suspend fun getNewsArticleByIdAsync(id: Int): LiveData<Article>
 

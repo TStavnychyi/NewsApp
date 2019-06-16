@@ -3,7 +3,9 @@ package com.tstv.newsapp.ui.news_article_details
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.tstv.newsapp.R
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
+import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.fragment_news_article_detail.*
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +54,7 @@ class ArticleDetailFragment : ScopedFragment(), KodeinAware {
         viewModel = ViewModelProviders.of(this@ArticleDetailFragment, viewModelFactory).get(ArticleDetailViewModel::class.java)
 
         articleId = args.articleId
+        viewModel.articleId = articleId
 
         bindUI()
     }
@@ -60,13 +63,12 @@ class ArticleDetailFragment : ScopedFragment(), KodeinAware {
         initToolbar()
 
         val webClient = ArticleDetailWebClient(news_group_loading_bar, web_view_content)
+        web_view_content.webViewClient = webClient
 
-        val articleItem = viewModel.getNewsArticleById(articleId)
+        val articleItem = viewModel.newsArticle.await()
 
-        articleItem.observe(this@ArticleDetailFragment, Observer {
-            web_view_content.webViewClient = webClient
+        articleItem.observeOnce(this@ArticleDetailFragment, Observer {
             web_view_content.loadUrl(it.url)
-
             article = it
         })
     }
@@ -81,8 +83,8 @@ class ArticleDetailFragment : ScopedFragment(), KodeinAware {
                 }
                 R.id.save_article -> {
                     launch(Dispatchers.IO) {
-                        val articleBookmark = BookmarksArticle(article)
-                        viewModel.saveArticleBookmark(articleBookmark)
+                        article.bookmark = true
+                        viewModel.saveArticleBookmark(article)
                         showToast("Article was successfully saved")
                     }
                     true

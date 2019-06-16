@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.repository.NewsRepository
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.data.vo.BookmarksArticle
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.AbsentLiveData
 
@@ -46,7 +45,7 @@ class NewsViewModel(
 
     suspend fun getNewsArticleByIdAsync(id: Int) = newsRepository.getNewsArticleByIdAsync(id)
 
-    suspend fun saveArticleBookmark(article: BookmarksArticle) = newsRepository.saveArticleBookmark(article)
+    suspend fun saveArticleBookmark(article: Article) = newsRepository.saveArticleBookmark(article)
 
     suspend fun saveNewsSourceIntoHidden(hiddenSourcesEntry: HiddenSourcesEntry) = newsRepository.addNewsSourceIntoHiddenList(hiddenSourcesEntry)
 

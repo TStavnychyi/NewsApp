@@ -40,17 +40,17 @@
             android:id="@+id/tv_article_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="asdjasjdasjdjasdjasjdasjdajsdasdadasddddddadsadsadsadsdsadasdasdsadsasadsadsadsadsadsadsadsadsadsadsadsasadsadsadsdsadsdsdasdlkasljflasjdljasldjasldslakd"
-            android:textSize="13sp"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
             android:maxLines="2"
             android:textStyle="bold"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="@+id/guideline_ver_perc"
             android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_article_image"
             app:layout_constraintBottom_toTopOf="@id/guideline_hor_perc"
-            />
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_article_options_button"/>
 
     <TextView
             android:layout_width="wrap_content"

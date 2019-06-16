@@ -1,25 +1,23 @@
 package com.tstv.newsapp.ui.bookmarks.view_holders
 
 import android.annotation.SuppressLint
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.converters.LocalDateConverter
+import com.tstv.newsapp.data.db.converters.LocalDateConverter.stringToDate
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.internal.listeners.RecyclerViewItemClickListener
+import com.tstv.newsapp.internal.listeners.OnRecyclerViewItemClickListener
 import com.tstv.newsapp.ui.base.BaseViewHolder
 
 class ArticleBookmarkViewHolder(
     private val view: View,
-    private val rvItemClickListener: RecyclerViewItemClickListener,
+    private val rvItemClickListenerOn: OnRecyclerViewItemClickListener,
     private val adapterDataListSize: Int
 ): BaseViewHolder<Article>(view), View.OnClickListener {
 
@@ -28,18 +26,18 @@ class ArticleBookmarkViewHolder(
     }
 
     companion object{
-        fun create(parent: ViewGroup, rvItemClickListener: RecyclerViewItemClickListener, adapterDataListSize: Int) : ArticleBookmarkViewHolder {
+        fun create(parent: ViewGroup, rvItemClickListenerOn: OnRecyclerViewItemClickListener, adapterDataListSize: Int) : ArticleBookmarkViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.adapter_item_popular_articles, parent, false)
             return ArticleBookmarkViewHolder(
                 view,
-                rvItemClickListener,
+                rvItemClickListenerOn,
                 adapterDataListSize
             )
         }
     }
 
-    override fun onClick(v: View?) = rvItemClickListener.onClick(v!!, adapterPosition)
+    override fun onClick(v: View?) = rvItemClickListenerOn.onClick(v!!, adapterPosition)
 
 
     private val tvArticleTitle = view.findViewById<TextView>(R.id.tv_article_title)
@@ -51,9 +49,7 @@ class ArticleBookmarkViewHolder(
 
     private lateinit var articleItem: Article
 
-     override fun bind(item: Article, adapterItemPosition: Int) {
-        resetViewsParams()
-
+    override fun bind(item: Article, adapterItemPosition: Int) {
         articleItem = item
 
         with(item){
@@ -62,7 +58,7 @@ class ArticleBookmarkViewHolder(
             parseAndSetDateToView(publishedAt)
 
             if(!urlToImage.isNullOrEmpty()){
-                setupGlide(urlToImage!!)
+                setupGlide(urlToImage)
             }
         }
 
@@ -88,12 +84,8 @@ class ArticleBookmarkViewHolder(
 
     @SuppressLint("SetTextI18n")
     private fun parseAndSetDateToView(publishedAt: String){
-        val localDate = LocalDateConverter.stringToDate(publishedAt)!!
+        val localDate = stringToDate(publishedAt)!!
         tvArticlePublishDate.text = "${localDate.dayOfMonth}-${localDate.month}-${localDate.year}"
-    }
-
-    private fun resetViewsParams(){
-        tvArticleTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, view.context.resources.getDimension(R.dimen.article_adapter_item_normal_text_size))
     }
 
 }

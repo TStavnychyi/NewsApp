@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tstv.newsapp.data.vo.Article
-import com.tstv.newsapp.internal.listeners.RecyclerViewItemClickListener
+import com.tstv.newsapp.internal.listeners.OnRecyclerViewItemClickListener
 import com.tstv.newsapp.ui.base.BaseViewHolder
 import com.tstv.newsapp.ui.bookmarks.view_holders.ArticleBookmarkViewHolder
 import com.tstv.newsapp.ui.bookmarks.view_holders.BookmarkViewHolder
@@ -12,7 +12,7 @@ import com.tstv.newsapp.ui.bookmarks.view_holders.BookmarkViewHolder
 class BookmarksAdapter(
     private val dataList: MutableList<Article>,
     private val adapterType: AdapterType,
-    private val rvItemClickListener: RecyclerViewItemClickListener
+    private val rvItemClickListenerOn: OnRecyclerViewItemClickListener
 ): RecyclerView.Adapter<BaseViewHolder<Article>>() {
 
     private lateinit var context: Context
@@ -29,7 +29,7 @@ class BookmarksAdapter(
         context = parent.context
 
         return if(adapterType == Companion.AdapterType.ADAPTER_TYPE_BOOKMARK_ARTICLE)
-            ArticleBookmarkViewHolder.create(parent, rvItemClickListener, dataList.size)
+            ArticleBookmarkViewHolder.create(parent, rvItemClickListenerOn, dataList.size)
         else
             BookmarkViewHolder(parent)
     }

@@ -3,6 +3,7 @@ package com.tstv.newsapp.data.vo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.threeten.bp.OffsetDateTime
 
 @Entity(tableName = "news_articles")
 data class Article(
@@ -17,7 +18,7 @@ data class Article(
     val title: String,
     val url: String?,
     val urlToImage: String?,
-    val bookmark: Boolean = false,
+    var bookmark: Boolean = false,
     var category: String? = "",
-    var fetchedTime: String?
+    var fetchedTime: OffsetDateTime?
 )
