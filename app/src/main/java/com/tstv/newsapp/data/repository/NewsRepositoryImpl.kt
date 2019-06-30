@@ -13,6 +13,7 @@ import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.data.vo.Resource
 import com.tstv.newsapp.internal.ContextProviders
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import org.threeten.bp.OffsetDateTime
 
@@ -22,10 +23,10 @@ class NewsRepositoryImpl(
     private val newsApiService: NewsApiService
 ) : NewsRepository {
 
-    val contextProviders = ContextProviders.getInstance()
+    override val completableJob = Job()
 
     override fun loadMoreNewsArticlesAsync(category: String, page: Int): LiveData<Resource<List<Article>>> {
-        return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
+        return object : NetworkBoundResource<List<Article>, NewsResponse>(completableJob){
             override fun saveCallResult(item: NewsResponse) {
                 val filteredNewsArticles = filterFetchedNewsFromHiddenSources(item.articles)
 
@@ -46,7 +47,7 @@ class NewsRepositoryImpl(
     }
 
     override fun getNewsArticlesAsync(category: String): LiveData<Resource<List<Article>>> {
-        return object : NetworkBoundResource<List<Article>, NewsResponse>(contextProviders){
+        return object : NetworkBoundResource<List<Article>, NewsResponse>(completableJob){
 
             override fun saveCallResult(item: NewsResponse) {
                 newsDao.removeTempNewsByCategory(category, OffsetDateTime.now().minusMinutes(30))

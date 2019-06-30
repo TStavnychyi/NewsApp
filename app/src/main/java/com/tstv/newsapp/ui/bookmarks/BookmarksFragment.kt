@@ -16,6 +16,7 @@ import com.tstv.newsapp.internal.observeOnce
 import com.tstv.newsapp.ui.base.ScopedFragment
 import com.tstv.newsapp.ui.bookmarks.BookmarksAdapter.Companion.AdapterType.ADAPTER_TYPE_BOOKMARK_ARTICLE
 import kotlinx.android.synthetic.main.bookmarks_block.*
+import kotlinx.android.synthetic.main.fragment_bookmarks.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -53,6 +54,8 @@ class BookmarksFragment : ScopedFragment(), KodeinAware {
             if(!it.isNullOrEmpty()) {
                 bookmarkArticles = it
                 initRecyclerView(it.toMutableList())
+                news_group_loading_bar.visibility = View.GONE
+                content_views_group.visibility = View.VISIBLE
             }
         })
 

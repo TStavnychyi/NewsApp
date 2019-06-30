@@ -4,27 +4,89 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ui.bookmarks.BookmarksFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content">
 
-        <include layout="@layout/bookmark_sources_block" />
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_hor_perc"
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.6"/>
 
-        <include layout="@layout/bookmark_local_news_block"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="12dp" />
+        <androidx.constraintlayout.widget.Group
+                android:id="@+id/news_group_loading_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="progressBar_loading, textView_loading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <include layout="@layout/bookmarks_block"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="12dp" />
+        <ProgressBar
+                android:id="@+id/progressBar_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline_hor_perc"
+                android:layout_marginTop="8dp"/>
 
-    </LinearLayout>
+        <TextView
+                android:id="@+id/textView_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/progress_bar_loading_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/progressBar_loading"
+                app:layout_constraintVertical_bias="0.0" />
 
+        <androidx.constraintlayout.widget.Group
+                android:id="@+id/content_views_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="include, include2, include3"
+                />
+
+        <include
+                layout="@layout/bookmark_sources_block"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/include"/>
+
+
+        <include
+                layout="@layout/bookmark_local_news_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/include"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/include2"/>
+
+
+        <include
+                android:id="@+id/include3"
+                layout="@layout/bookmarks_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/include2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

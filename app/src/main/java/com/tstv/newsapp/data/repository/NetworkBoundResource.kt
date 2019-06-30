@@ -7,13 +7,13 @@ import com.tstv.newsapp.data.network.response.ApiErrorResponse
 import com.tstv.newsapp.data.network.response.ApiResponse
 import com.tstv.newsapp.data.network.response.ApiSuccessResponse
 import com.tstv.newsapp.data.vo.Resource
-import com.tstv.newsapp.internal.ContextProviders
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 abstract class NetworkBoundResource<ResultType, RequestType>
-constructor(private val contextProviders: ContextProviders) {
+constructor( private val job: Job) {
+
+    private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
@@ -49,9 +49,9 @@ constructor(private val contextProviders: ContextProviders) {
             result.removeSource(dbSource)
             when (response) {
                 is ApiSuccessResponse -> {
-                    GlobalScope.launch(contextProviders.IO) {
+                    coroutineScope.launch {
                         saveCallResult(processResponse(response))
-                        GlobalScope.launch(contextProviders.Main) {
+                        withContext(Dispatchers.Main) {
                             result.addSource(loadFromDb()) { newData ->
                                 setValue(Resource.success(newData))
                             }
@@ -59,7 +59,7 @@ constructor(private val contextProviders: ContextProviders) {
                     }
                 }
                 is ApiEmptyResponse -> {
-                    GlobalScope.launch(contextProviders.Main) {
+                    coroutineScope.launch {
                         result.addSource(loadFromDb()) { newData ->
                             setValue(Resource.success(newData))
                         }

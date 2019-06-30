@@ -50,4 +50,5 @@ class NewsViewModel(
     suspend fun saveNewsSourceIntoHidden(hiddenSourcesEntry: HiddenSourcesEntry) = newsRepository.addNewsSourceIntoHiddenList(hiddenSourcesEntry)
 
     suspend fun removeHiddenNewsSourceFromDB(sourceID: String) = newsRepository.removeHiddenNewsSourceFromDB(sourceID)
+
 }

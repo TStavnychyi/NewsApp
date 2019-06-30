@@ -5,8 +5,11 @@ import com.tstv.newsapp.data.db.entity.HiddenSourcesEntry
 import com.tstv.newsapp.data.db.entity.SelectedNewsCategoriesEntry
 import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.data.vo.Resource
+import kotlinx.coroutines.Job
 
 interface NewsRepository {
+
+    val completableJob: Job
 
     //TODO ADD RETURNS TYPE FROM INSERT METHODS AND PROCESS THIS DATA IN UI
 
