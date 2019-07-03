@@ -11,7 +11,6 @@ import com.tstv.newsapp.data.network.response.ApiResponse
 import com.tstv.newsapp.data.network.response.NewsResponse
 import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.data.vo.Resource
-import com.tstv.newsapp.internal.ContextProviders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
