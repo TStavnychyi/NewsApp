@@ -4,11 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tstv.newsapp.R
+import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.ui.base.ScopedFragment
+import com.tstv.newsapp.ui.news_compilation.adapters.CompilationArticlesAdapter
+import com.tstv.newsapp.ui.news_compilation.adapters.TopArticlesAdapter
 import com.tstv.newsapp.ui.news_compilation.view_model.NewsCompilationViewModel
 import com.tstv.newsapp.ui.news_compilation.view_model.NewsCompilationViewModelFactory
+import kotlinx.android.synthetic.main.fragment_news_compilation.*
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -21,6 +28,9 @@ class NewsCompilationFragment: ScopedFragment(), KodeinAware {
 
     private val viewModelFactory: NewsCompilationViewModelFactory by instance()
 
+    private lateinit var topArticlesAdapter: TopArticlesAdapter
+    private lateinit var compilationAdapter: CompilationArticlesAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_news_compilation, container, false)
 
@@ -30,6 +40,33 @@ class NewsCompilationFragment: ScopedFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this@NewsCompilationFragment, viewModelFactory)[NewsCompilationViewModel::class.java]
+        bindUI()
+    }
+
+    private fun bindUI() = launch{
+        viewModel.getDummyData().observe(this@NewsCompilationFragment, Observer {
+            if (!it.isNullOrEmpty()){
+                initTopArticlesRecyclerView(it.take(5))
+                initCompilationRecyclerView(it)
+            }
+
+        })
+    }
+
+    private fun initTopArticlesRecyclerView(topArticlesData: List<Article>){
+        topArticlesAdapter = TopArticlesAdapter(topArticlesData)
+        rv_top_articles.apply {
+            adapter = topArticlesAdapter
+            layoutManager = LinearLayoutManager(this@NewsCompilationFragment.context)
+        }
+    }
+
+    private fun initCompilationRecyclerView(topArticlesData: List<Article>){
+        compilationAdapter = CompilationArticlesAdapter(topArticlesData)
+        rv_articles_compilation.apply {
+            adapter = compilationAdapter
+            layoutManager = LinearLayoutManager(this@NewsCompilationFragment.context)
+        }
     }
 
 }

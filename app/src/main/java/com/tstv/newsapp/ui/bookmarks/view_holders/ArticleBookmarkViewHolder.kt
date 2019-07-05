@@ -55,10 +55,10 @@ class ArticleBookmarkViewHolder(
         with(item){
             tvArticleTitle.text = title
             tvArticlePublisher.text = source?.name ?: author
-            parseAndSetDateToView(publishedAt)
+            tvArticlePublishDate.text = parseAndSetDateToView(publishedAt)
 
             if(!urlToImage.isNullOrEmpty()){
-                setupGlide(urlToImage)
+                setupGlide(urlToImage, ivArticleImage)
             }
         }
 
@@ -66,26 +66,6 @@ class ArticleBookmarkViewHolder(
             dividerView.visibility = View.INVISIBLE
         else
             dividerView.visibility = View.VISIBLE
-    }
-
-    private fun setupGlide(imageUrlToDownload: String){
-        val requestOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .centerCrop()
-            .override(ivArticleImage.width, ivArticleImage.height)
-            .placeholder(R.drawable.image_placeholder)
-
-
-        Glide.with(view.context)
-            .load(imageUrlToDownload)
-            .apply(requestOptions)
-            .into(ivArticleImage)
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun parseAndSetDateToView(publishedAt: String){
-        val localDate = stringToDate(publishedAt)!!
-        tvArticlePublishDate.text = "${localDate.dayOfMonth}-${localDate.month}-${localDate.year}"
     }
 
 }

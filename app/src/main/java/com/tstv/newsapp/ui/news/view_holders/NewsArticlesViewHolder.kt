@@ -53,13 +53,13 @@ class NewsArticlesViewHolder(
         with(item){
             tvArticleTitle.text = title
             tvArticlePublisher.text = source?.name ?: author
-            parseAndSetDateToView(publishedAt)
+            tvArticlePublishDate.text = parseAndSetDateToView(publishedAt)
 
             if(urlToImage.isNullOrEmpty()){
                 handleImageAbsence(content)
             }
             else {
-                setupGlide(urlToImage!!)
+                setupGlide(urlToImage, ivArticleImage)
             }
         }
 
@@ -90,25 +90,6 @@ class NewsArticlesViewHolder(
         bindViewsClickListeners()
     }
 
-    private fun setupGlide(imageUrlToDownload: String){
-        val requestOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .centerCrop()
-            .override(ivArticleImage.width, ivArticleImage.height)
-            .placeholder(R.drawable.image_placeholder)
-
-
-        Glide.with(view.context)
-            .load(imageUrlToDownload)
-            .apply(requestOptions)
-            .into(ivArticleImage)
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun parseAndSetDateToView(publishedAt: String){
-        val localDate = LocalDateConverter.stringToDate(publishedAt)!!
-        tvArticlePublishDate.text = "${localDate.dayOfMonth}-${localDate.month}-${localDate.year}"
-    }
     private fun handleImageAbsence(contentText: String?){
         if(contentText != null) {
             cardView.visibility = View.GONE
