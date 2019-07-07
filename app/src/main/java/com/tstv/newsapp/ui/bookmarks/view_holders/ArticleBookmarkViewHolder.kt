@@ -1,16 +1,11 @@
 package com.tstv.newsapp.ui.bookmarks.view_holders
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.tstv.newsapp.R
-import com.tstv.newsapp.data.db.converters.LocalDateConverter.stringToDate
 import com.tstv.newsapp.data.vo.Article
 import com.tstv.newsapp.internal.listeners.OnRecyclerViewItemClickListener
 import com.tstv.newsapp.ui.base.BaseViewHolder

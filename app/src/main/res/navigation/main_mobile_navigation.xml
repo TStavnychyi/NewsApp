@@ -66,6 +66,10 @@
     <fragment
             android:id="@+id/destination_news_compilation"
             android:name="com.tstv.newsapp.ui.news_compilation.NewsCompilationFragment"
-            android:label="NewsCompilationFragment"/>
+            android:label="NewsCompilationFragment">
+        <action
+                android:id="@+id/action_from_news_compilation_to_article_detail"
+                app:destination="@id/newsArticleDetailFragment"/>
+    </fragment>
 
 </navigation>

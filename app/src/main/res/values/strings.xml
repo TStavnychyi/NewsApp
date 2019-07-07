@@ -16,6 +16,7 @@
     <string name="btn_view_all_bookmarks_and_set_up">View everything and set up</string>
     <string name="bookmarks_local_news_block_title">Local news</string>
     <string name="bookmark_saved_news_title">Saved news</string>
+    <string name="search_title">Search</string>
 
     <string-array name="interests_categories">
         <item>Politics</item>
